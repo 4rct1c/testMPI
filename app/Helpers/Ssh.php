@@ -15,10 +15,9 @@ class Ssh extends OriginalSsh
     public const KEY_PATH = 'C:\Users\baika\.ssh\mpi-test';
 
     public const PORT = 22;
+
     /**
-     * @param string|array $command
-     *
-     * @return string
+     * @inheritDoc
      */
     public function getExecuteCommand($command): string
     {

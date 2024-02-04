@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use JetBrains\PhpStorm\NoReturn;
 use App\Helpers\Ssh;
+use Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\Process\Process;
 
 class SSHController extends Controller
 {
@@ -13,26 +15,41 @@ class SSHController extends Controller
         self::sendCommand();
     }
 
-    private static function secondAttempt() : void
-    {
-        $resource = ssh2_connect('91.197.1.40', 22, 'client_to_server');
-        dd($resource);
 
+    public static function secondAttempt() : void {
+        $command = ["ssh -p 22 -i C:\Users\baika\.ssh\mpi-test Arct1cW@91.197.1.40 'bash -se'", "ls"];
+        $process = new Process($command);
+        try {
+            $process->mustRun();
+
+            // Get the command output
+            $output = $process->getOutput();
+
+            dd($output);
+        } catch (ProcessFailedException $e) {
+            // Handle the exception...
+            $errorMessage = $e->getMessage();
+            dump($process);
+            dump($errorMessage);
+        }
     }
 
     #[NoReturn] public static function sendCommand() : void
     {
         $command = 'ls';
-        $ssh = Ssh::create(Ssh::USER, Ssh::HOST, Ssh::PORT);
+        $ssh = new Ssh(Ssh::USER, Ssh::HOST, Ssh::PORT);
         $ssh->usePrivateKey(Ssh::KEY_PATH);
-        $ssh->removeBash();
-        dump($ssh->getExecuteCommand($command));
-        dump($ssh);
+//        $ssh->removeBash();
         $process = $ssh->execute($command);
         dump($process->getCommandLine());
         dump($process->getOutput());
         dump($process->getErrorOutput());
         dump($process->isSuccessful());
+        dump($process->getExitCode());
+        dump($process->getExitCodeText());
+        dump($process->getStatus());
+//        dump($process->getTermSignal());
+        dump($process->getEnv());
         dd($process);
     }
 
