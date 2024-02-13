@@ -12,7 +12,7 @@ class Ssh extends OriginalSsh
 
     public const HOST = '91.197.1.40';
 
-    public const KEY_PATH = '/home/arct1c/.ssh/veesp';
+    public const KEY_PATH = '~/.ssh/veesp_www';
 
     public const PORT = 22;
 
