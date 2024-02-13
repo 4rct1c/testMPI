@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use JetBrains\PhpStorm\NoReturn;
 use App\Helpers\Ssh;
-use Symfony\Component\Process\Exception\ProcessFailedException;
-use Symfony\Component\Process\Process;
 
 class SSHController extends Controller
 {
