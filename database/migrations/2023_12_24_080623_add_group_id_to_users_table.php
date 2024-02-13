@@ -14,6 +14,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('type');
+        });
+        Schema::table('users', function (Blueprint $table) {
             $table->foreignIdFor(Group::class)->nullable()->constrained()->cascadeOnDelete();
             $table->foreignIdFor(UserType::class, 'type')->nullable()->constrained('user_types')->cascadeOnDelete();
         });
@@ -27,7 +30,7 @@ return new class extends Migration
         Schema::table('users', function (Blueprint $table) {
             $table->dropForeign('users_group_id_foreign');
             $table->dropColumn('group_id');
-            $table->dropForeign('users_user_type_id_foreign');
+            $table->dropForeign('users_type_foreign');
             $table->dropColumn('type');
         });
     }
