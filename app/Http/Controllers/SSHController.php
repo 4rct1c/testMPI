@@ -11,7 +11,7 @@ class SSHController extends Controller
 {
 
     public function test(){
-        self::secondAttempt();
+//        self::secondAttempt();
         self::sendCommand();
     }
 
