@@ -1,5 +1,5 @@
 import React from 'react'
-import ReactDOM from 'react-dom/client'
+import {Link} from "react-router-dom";
 
 function Application() {
     return (
@@ -9,7 +9,10 @@ function Application() {
                     <div className="card">
                         <div className="card-header">Example Component</div>
 
-                        <div className="card-body">I'm an example component!</div>
+                        <div className="card-body">
+                            <Link to={'teacher'}>Teacher</Link>
+                            <Link to={'student'}>Student</Link>
+                        </div>
                     </div>
                 </div>
             </div>
