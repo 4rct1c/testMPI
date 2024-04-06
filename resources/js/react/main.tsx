@@ -10,24 +10,50 @@ import {StudentPage} from "./components/student/StudentPage";
 import {TeacherPage} from "./components/teacher/TeacherPage";
 
 declare global {
-    let role: string
+    const role: string
 }
 
-const router = createBrowserRouter([
-    {
-        path: "/",
-        element: <Application/>,
-        errorElement: <ErrorPage/>
-    },
-    {
-        path: "/student/",
-        element: <StudentPage/>
-    },
-    {
-        path: "/teacher/",
-        element: <TeacherPage/>
-    },
-])
+
+
+const getRoutes = (chosen_role : string | null = null) : {path: string, element: any, errorElement: any}[] => {
+    let result = []
+    let url_prefix : string
+    if (chosen_role === null) {
+        url_prefix = '/'
+        chosen_role = role
+    }
+    else {
+        url_prefix = '/' + chosen_role + '/'
+    }
+    switch (chosen_role){
+        case 'student':
+            result.push({
+                path: url_prefix,
+                element: <StudentPage/>,
+                errorElement: <ErrorPage/>
+            })
+            break
+        case 'teacher':
+            result.push({
+                path: url_prefix,
+                element: <TeacherPage/>,
+                errorElement: <ErrorPage/>
+            })
+            break
+        case 'admin':
+            result.push({
+                path: "/",
+                element: <Application/>,
+                errorElement: <ErrorPage/>
+            })
+            result = [...result, ...getRoutes('student'), ...getRoutes('teacher')]
+            break
+    }
+    return result
+}
+
+const router = createBrowserRouter(getRoutes())
+
 const root = ReactDOM.createRoot(document.getElementById('application'))
 
 root.render(
