@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [MainController::class, 'react'])->name('react');
+Route::get('/{path?}', [MainController::class, 'react'])->name('react');
 
 Route::get('/ssh/test/', [SSHController::class, 'test'])->name('testSSH');
 
