@@ -1,16 +1,17 @@
 import React from 'react'
+import {TasksColumn} from "./TasksColumn";
 
 function StudentPage() {
     return (
-        <div className="container">
-            <div className="row justify-content-center">
-                <div className="col-md-8">
-                    <div className="card">
-                        <div className="card-header">StudentPage Component</div>
-
-                        <div className="card-body">I'm an example component!</div>
-                    </div>
+        <div className="columns is-fullwidth mx-4">
+            <div className="column is-four-fifths-desktop">
+                <TasksColumn courses={[]}/>
+            </div>
+            <div className="column is-one-fifth-desktop">
+                <div className="box">
+                    there
                 </div>
+
             </div>
         </div>
     );
