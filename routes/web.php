@@ -2,9 +2,9 @@
 
 use App\Http\Controllers\MainController;
 use App\Http\Controllers\SSHController;
+use App\Http\Controllers\StudentController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-//use App\Http\Controllers\HomeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,11 +16,12 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+Auth::routes();
 
 Route::get('/{path?}', [MainController::class, 'react'])->name('react');
 
 Route::get('/ssh/test/', [SSHController::class, 'test'])->name('testSSH');
+Route::get('/api/exercises/load/', [StudentController::class, 'loadExercises'])->name('loadExercises');
 
-Auth::routes();
 
 //Route::get('/home', [HomeController::class, 'index'])->name('home');
