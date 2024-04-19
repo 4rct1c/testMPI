@@ -2,10 +2,11 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * @mixin \Illuminate\Database\Eloquent\Builder
+ * @mixin Builder
  * @mixin \Illuminate\Database\Query\Builder
  *
  * @property int    $id
@@ -16,7 +17,7 @@ use Illuminate\Database\Eloquent\Model;
 class Course extends Model
 {
 
-    public $table = 'course';
+    public $table = 'courses';
 
     public $fillable = [
         'group_id',

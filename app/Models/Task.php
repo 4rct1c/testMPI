@@ -3,10 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Query\Builder;
 
 /**
  * @mixin \Illuminate\Database\Eloquent\Builder
- * @mixin \Illuminate\Database\Query\Builder
+ * @mixin Builder
  *
  * @property int    $id
  * @property int    $user_id
