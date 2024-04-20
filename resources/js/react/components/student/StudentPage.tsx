@@ -10,7 +10,7 @@ function StudentPage() {
             </div>
             <div className="column is-one-fifth-desktop">
                 <div className="box theme-light">
-                    there
+                    Info block
                 </div>
 
             </div>

@@ -1,6 +1,7 @@
 export type ApiRoutes = {
     load_courses: string
     load_tasks: string
+    load_exercise: string
 }
 
 export type Course = {

@@ -17,14 +17,16 @@ use Illuminate\Support\Facades\Route;
 */
 Auth::routes();
 
-Route::get('/', function () {return redirect(\route('reactWithoutRole'));})->name('default');
+Route::get('/', function () {return redirect(\route('react'));})->name('default');
 
-Route::get('/portal/', [MainController::class, 'reactWithoutRole'])->name('reactWithoutRole');
-Route::get('/portal/{role}/{path?}/', [MainController::class, 'react'])->name('react');
+//Route::get('/portal/', [MainController::class, 'reactWithoutRole'])->name('reactWithoutRole');
+Route::get('/portal/{path?}', [MainController::class, 'react'])
+    ->where('path', '.*')->name('react');
 
 //Route::get('/ssh/test/', [SSHController::class, 'test'])->name('testSSH');
 Route::get('/api/courses/load/', [StudentController::class, 'loadCourses'])->name('loadCourses');
 Route::get('/api/tasks/load/', [StudentController::class, 'loadTasks'])->name('loadTasks');
+Route::get('/api/exercise/load/{id?}', [MainController::class, 'loadExercise'])->name('loadExercise');
 
 
 //Route::get('/home', [HomeController::class, 'index'])->name('home');

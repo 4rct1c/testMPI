@@ -9,6 +9,7 @@ import {StudentPage} from "./Components"
 import {TeacherPage} from "./Components"
 import {AdminPage} from "./Components"
 import {ApiRoutes} from "./types/types";
+import {ExercisePage} from "./components/student/ExercisePage";
 
 declare global {
     const role: string
@@ -20,30 +21,45 @@ export const getApiRoutes = () => {
 }
 
 
-const getRoutes = (chosen_role : string | null = null) : {path: string, element: any, errorElement: any}[] => {
+const getRoutes = (chosenRole : string | null = null) : {path: string, element: any, errorElement: any}[] => {
     let routes = []
-    const prefix = '/portal/'
-    if (chosen_role === null) {
-        chosen_role = role
+    let prefix = '/portal/'
+    if (chosenRole === null) {
+        chosenRole = role
     }
-    switch (chosen_role){
+    else if (role === 'admin') {
+        prefix += chosenRole
+    }
+    switch (chosenRole){
         case 'student':
             routes.push({
-                path: prefix + chosen_role,
+                path: prefix,
                 element: <StudentPage/>,
                 errorElement: <ErrorPage/>
+            })
+            routes.push({
+                path: prefix + 'exercise',
+                element: <ExercisePage/>,
+                errorElement: <ErrorPage/>,
+                children: [
+                    {
+                        path: prefix + 'exercise/:id',
+                        element: <ExercisePage/>,
+                        errorElement: <ErrorPage/>
+                    }
+                ]
             })
             break
         case 'teacher':
             routes.push({
-                path: prefix + chosen_role,
+                path: prefix,
                 element: <TeacherPage/>,
                 errorElement: <ErrorPage/>
             })
             break
         case 'admin':
             routes.push({
-                path: prefix + chosen_role,
+                path: prefix,
                 element: <AdminPage/>,
                 errorElement: <ErrorPage/>
             })
@@ -51,7 +67,7 @@ const getRoutes = (chosen_role : string | null = null) : {path: string, element:
             break
         case 'guest':
             routes.push({
-                path: prefix + chosen_role,
+                path: prefix,
                 element: <div>
                     <h4>Необходима регистрация</h4>
                 </div>,

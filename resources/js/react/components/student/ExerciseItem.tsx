@@ -1,5 +1,6 @@
 import React from 'react'
 import {Exercise as ExerciseType, Task} from "../../types/types";
+import {useNavigate} from "react-router-dom";
 
 type Props = {
     exercise: ExerciseType
@@ -7,9 +8,15 @@ type Props = {
     key: number
 }
 
-function Exercise(props : Props) {
+function ExerciseItem(props : Props) {
 
     const noDataPlaceholder = '—'
+
+    const navigate = useNavigate()
+
+    const handleTaskLink = () => {
+        navigate('/portal/exercise/' + props.exercise.id)
+    }
 
     const taskInfo = (props.task ? props.task : {
         last_uploaded_at: noDataPlaceholder,
@@ -23,11 +30,8 @@ function Exercise(props : Props) {
             awaiting: 'Ожидает проверки'
         }[taskInfo.test_status] ?? noDataPlaceholder
 
-        const deadlineWasMissed = taskInfo.last_uploaded_at > props.exercise.deadline
         let score = taskInfo.mark / props.exercise.max_score
-
-        console.log(taskInfo.last_uploaded_at, props.exercise.deadline, deadlineWasMissed)
-
+        const deadlineWasMissed = taskInfo.last_uploaded_at > props.exercise.deadline
         if (deadlineWasMissed) score *= props.exercise.deadline_multiplier
         return Math.round(score * 100) + '%'
     }
@@ -41,7 +45,7 @@ function Exercise(props : Props) {
     }
 
     return (
-        <tr className="is-hoverable is-clickable">
+        <tr className="is-hoverable is-clickable" onClick={handleTaskLink}>
             <td>{props.exercise.title}</td>
             <td>{dateForHumans(props.exercise.deadline)}</td>
             <td>{dateForHumans(taskInfo.last_uploaded_at)}</td>
@@ -50,5 +54,5 @@ function Exercise(props : Props) {
     );
 }
 
-export {Exercise}
+export {ExerciseItem}
 

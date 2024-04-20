@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import {Exercise} from "./Exercise";
+import {ExerciseItem} from "./ExerciseItem";
 import {CourseWithExercises, Task} from "../../types/types";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCaretDown, faCaretUp} from "@fortawesome/free-solid-svg-icons";
@@ -25,9 +25,9 @@ const CourseExercises = (props : Props) => {
                     <th>Оценка</th>
                 </tr></thead>
                 <tbody>
-                {props.course.exercises.map(exercise => <Exercise exercise={exercise}
-                                                                  key={exercise.id}
-                                                                  task={props.tasks.filter(task => task.exercise_id === exercise.id)[0]}
+                {props.course.exercises.map(exercise => <ExerciseItem exercise={exercise}
+                                                                      key={exercise.id}
+                                                                      task={props.tasks.filter(task => task.exercise_id === exercise.id)[0]}
                 />)}
                 </tbody>
             </table>

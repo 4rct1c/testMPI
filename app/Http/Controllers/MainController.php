@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\RoutesHelper;
+use App\Models\Exercise;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
@@ -17,25 +18,18 @@ class MainController extends Controller
         return redirect(route('react', ['role' => $userTypeCode]));
     }
 
-    public function react(string $role)
+    public function react()
     {
         /** @var User $user */
         $user = Auth::user();
         $userTypeCode = $user->type?->code ?? 'guest';
-        if ($userTypeCode !== $role){
-            if ($user->isAdmin()){
-                $userTypeCode = $role;
-            }
-            else {
-                if ($role === 'guest'){
-                    return redirect(route('react', ['role' => $userTypeCode]));
-                }
-                abort(403, 'Forbidden. Wrong role.');
-            }
-        }
         return view('react', [
             'role' => $userTypeCode,
             'apiRoutes' => RoutesHelper::getApiRoutes()
         ]);
+    }
+
+    public function loadExercise(int $id) : ?Exercise{
+        return Exercise::find($id);
     }
 }
