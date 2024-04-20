@@ -73,23 +73,6 @@ class User extends Authenticatable
         return $this->type?->code === 'admin';
     }
 
-    public function getExercises() : ?Collection
-    {
-        $group = $this->group;
-        if ($group === null){
-            return null;
-        }
-        $courses = $group->courses;
-        if ($courses === null){
-            return null;
-        }
-        $exercises = new Collection();
-        foreach ($courses as $course){
-            $exercises->push($course->exersizes);
-        }
-        return $exercises;
-    }
-
     public function type(): BelongsTo
     {
         return $this->belongsTo(UserType::class, 'user_type_id', 'id');

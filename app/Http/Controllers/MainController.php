@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\RoutesHelper;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
@@ -23,17 +24,18 @@ class MainController extends Controller
         $userTypeCode = $user->type?->code ?? 'guest';
         if ($userTypeCode !== $role){
             if ($user->isAdmin()){
-                return view('react', [
-                    'role' => $role
-                ]);
+                $userTypeCode = $role;
             }
-            if ($role === 'guest'){
-                return redirect(route('react', ['role' => $userTypeCode]));
+            else {
+                if ($role === 'guest'){
+                    return redirect(route('react', ['role' => $userTypeCode]));
+                }
+                abort(403, 'Forbidden. Wrong role.');
             }
-            abort(403, 'Forbidden. Wrong role.');
         }
         return view('react', [
-            'role' => $userTypeCode
+            'role' => $userTypeCode,
+            'apiRoutes' => RoutesHelper::getApiRoutes()
         ]);
     }
 }

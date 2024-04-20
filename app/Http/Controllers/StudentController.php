@@ -9,10 +9,10 @@ use Illuminate\Support\Facades\Auth;
 class StudentController extends Controller
 {
 
-    public function loadExercises() : Collection {
+    public function loadCourses() : Collection {
         /** @var User $user */
         $user = Auth::user();
-        return $user->getExercises() ?? Collection::empty();
+        return $user->group?->courses()->with('exercises')->get() ?? Collection::empty();
     }
 
     public function uploadAnswer() : bool {
