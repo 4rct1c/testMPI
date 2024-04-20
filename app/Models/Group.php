@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Collection;
 
 /**
  * @mixin \Illuminate\Database\Eloquent\Builder
@@ -11,6 +13,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property int    $id
  * @property string $code
  * @property string $name
+ *
+ * @property Collection<Course> $courses
  *
  */
 class Group extends Model
@@ -22,6 +26,11 @@ class Group extends Model
         'code',
         'name'
     ];
+
+    public function courses(): HasMany
+    {
+        return $this->hasMany(Course::class);
+    }
 
 
 }

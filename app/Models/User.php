@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Collection;
 use Laravel\Sanctum\HasApiTokens;
 
 /**
@@ -20,6 +21,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @property int $group_id
  * @property int $user_type_id
  * @property UserType $type
+ * @property Group $group
  */
 class User extends Authenticatable
 {
@@ -71,8 +73,30 @@ class User extends Authenticatable
         return $this->type?->code === 'admin';
     }
 
+    public function getExercises() : ?Collection
+    {
+        $group = $this->group;
+        if ($group === null){
+            return null;
+        }
+        $courses = $group->courses;
+        if ($courses === null){
+            return null;
+        }
+        $exercises = new Collection();
+        foreach ($courses as $course){
+            $exercises->push($course->exersizes);
+        }
+        return $exercises;
+    }
+
     public function type(): BelongsTo
     {
         return $this->belongsTo(UserType::class, 'user_type_id', 'id');
+    }
+
+    public function group(): BelongsTo
+    {
+        return $this->belongsTo(Group::class);
     }
 }
