@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use Illuminate\Contracts\Support\Renderable;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class MainController extends Controller
@@ -23,7 +21,15 @@ class MainController extends Controller
         /** @var User $user */
         $user = Auth::user();
         $userTypeCode = $user->type?->code ?? 'guest';
-        if (!$user->isAdmin() && $userTypeCode !== $role){
+        if ($userTypeCode !== $role){
+            if ($user->isAdmin()){
+                return view('react', [
+                    'role' => $role
+                ]);
+            }
+            if ($role === 'guest'){
+                return redirect(route('react', ['role' => $userTypeCode]));
+            }
             abort(403, 'Forbidden. Wrong role.');
         }
         return view('react', [
