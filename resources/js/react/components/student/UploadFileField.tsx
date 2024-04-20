@@ -4,7 +4,7 @@ import {getApiRoutes} from "../../main";
 
 type Props = {
     exerciseId: number
-    taskId: string|null
+    taskId: number|null
 }
 
 const UploadFileField = (props: Props) => {

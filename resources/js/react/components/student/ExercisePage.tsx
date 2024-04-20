@@ -2,7 +2,7 @@ import {useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import axios from "axios";
 import {getApiRoutes} from "../../main";
-import {UploadFileField} from "./UploadFileField";
+import {TaskFieldsBlock} from "./TaskFieldsBlock";
 
 const ExercisePage = () => {
 
@@ -33,10 +33,18 @@ const ExercisePage = () => {
     if (exercise === undefined) return <></>
 
     return (
-        <div className="box is-block theme-light m-3">
-            <h3 className="is-size-3 m-2">{exercise.title}</h3>
-            <div className="is-block m-2">{exercise.text}</div>
-            <UploadFileField exerciseId={exercise.id} taskId={taskWasUploaded ? exercise.task.id : null}/>
+        <div className="columns mx-4">
+            <div className="column is-two-thirds-desktop">
+                <div className="box theme-light">
+                    <h3 className="is-size-3 m-2">{exercise.title}</h3>
+                    <div className="is-block m-2">{exercise.text}</div>
+                </div>
+            </div>
+            <div className="column is-one-third-desktop">
+                <div className="box theme-light">
+                    <TaskFieldsBlock task={taskWasUploaded ? exercise.task : null} exercise={exercise}/>
+                </div>
+            </div>
         </div>
     )
 }
