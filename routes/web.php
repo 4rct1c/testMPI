@@ -27,6 +27,7 @@ Route::get('/portal/{path?}', [MainController::class, 'react'])
 Route::get('/api/courses/load/', [StudentController::class, 'loadCourses'])->name('loadCourses');
 Route::get('/api/tasks/load/', [StudentController::class, 'loadTasks'])->name('loadTasks');
 Route::get('/api/exercise/load/{id?}', [MainController::class, 'loadExercise'])->name('loadExercise');
+Route::post('/api/file/upload/', [StudentController::class, 'uploadFile'])->name('uploadFile');
 
 
 //Route::get('/home', [HomeController::class, 'index'])->name('home');

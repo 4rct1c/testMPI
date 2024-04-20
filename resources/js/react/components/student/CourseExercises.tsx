@@ -10,7 +10,7 @@ type Props = {
     key: number
 }
 
-const CourseExercises = (props : Props) => {
+const CourseExercises = (props: Props) => {
 
     const [showExercises, setShowExercises] = useState(false)
 
@@ -18,17 +18,20 @@ const CourseExercises = (props : Props) => {
         if (!showExercises) return <></>
         return (
             <table className="table">
-                <thead><tr>
+                <thead>
+                <tr>
                     <th>Наименование</th>
                     <th>Крайний срок</th>
                     <th>Загружено</th>
                     <th>Оценка</th>
-                </tr></thead>
+                </tr>
+                </thead>
                 <tbody>
-                {props.course.exercises.map(exercise => <ExerciseItem exercise={exercise}
-                                                                      key={exercise.id}
-                                                                      task={props.tasks.filter(task => task.exercise_id === exercise.id)[0]}
-                />)}
+                {props.course.exercises.sort((a, b) => (a.deadline > b.deadline) ? 1 : ((b.deadline > a.deadline) ? -1 : 0))
+                    .map(exercise => <ExerciseItem exercise={exercise}
+                                                   key={exercise.id}
+                                                   task={props.tasks.filter(task => task.exercise_id === exercise.id)[0]}
+                    />)}
                 </tbody>
             </table>
         )
@@ -40,7 +43,8 @@ const CourseExercises = (props : Props) => {
                 <h4 className="is-size-4 my-0">
                     {props.course.name}
                 </h4>
-                <FontAwesomeIcon icon={showExercises ? faCaretUp : faCaretDown} className="ml-auto is-align-self-center" size='xl'/>
+                <FontAwesomeIcon icon={showExercises ? faCaretUp : faCaretDown} className="ml-auto is-align-self-center"
+                                 size='xl'/>
             </div>
             {viewExercisesList()}
         </div>

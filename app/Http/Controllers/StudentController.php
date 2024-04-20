@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 
@@ -17,14 +18,15 @@ class StudentController extends Controller
                 ->with('exercises')
                 ->get() ?? Collection::empty();
     }
+
     public function loadTasks() : Collection {
         /** @var User $user */
         $user = Auth::user();
         return $user->tasks ?? Collection::empty();
     }
 
-    public function uploadAnswer() : bool {
-        return false;
+    public function uploadFile(Request $request) : bool {
+        dd($request);
     }
 
 }

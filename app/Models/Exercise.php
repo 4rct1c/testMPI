@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int                $max_score
  * @property string             $deadline
  * @property double             $deadline_multiplier
+ * @property string             $text
  * @property Collection<Task>   $tasks
  *
  */
@@ -31,11 +32,18 @@ class Exercise extends Model
         'max_score',
         'deadline',
         'deadline_multiplier',
+        'text',
     ];
 
 
     public function tasks() : HasMany
     {
         return $this->hasMany(Task::class);
+    }
+
+
+    public function attachments() : HasMany
+    {
+        return $this->hasMany(ExerciseAttachment::class);
     }
 }
