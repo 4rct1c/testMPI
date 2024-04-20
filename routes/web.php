@@ -24,6 +24,7 @@ Route::get('/portal/{role}/{path?}/', [MainController::class, 'react'])->name('r
 
 //Route::get('/ssh/test/', [SSHController::class, 'test'])->name('testSSH');
 Route::get('/api/courses/load/', [StudentController::class, 'loadCourses'])->name('loadCourses');
+Route::get('/api/tasks/load/', [StudentController::class, 'loadTasks'])->name('loadTasks');
 
 
 //Route::get('/home', [HomeController::class, 'index'])->name('home');

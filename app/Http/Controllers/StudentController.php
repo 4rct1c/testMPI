@@ -12,7 +12,15 @@ class StudentController extends Controller
     public function loadCourses() : Collection {
         /** @var User $user */
         $user = Auth::user();
-        return $user->group?->courses()->with('exercises')->get() ?? Collection::empty();
+        return $user->group
+                ?->courses()
+                ->with('exercises')
+                ->get() ?? Collection::empty();
+    }
+    public function loadTasks() : Collection {
+        /** @var User $user */
+        $user = Auth::user();
+        return $user->tasks ?? Collection::empty();
     }
 
     public function uploadAnswer() : bool {

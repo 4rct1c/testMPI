@@ -1,5 +1,6 @@
 export type ApiRoutes = {
     load_courses: string
+    load_tasks: string
 }
 
 export type Course = {
@@ -7,6 +8,8 @@ export type Course = {
     group_id: number
     teacher_id: number
     name: string
+    created_at?: number
+    updated_at?: number
 }
 
 export type Exercise = {
@@ -16,8 +19,23 @@ export type Exercise = {
     max_score: number
     deadline: string
     deadline_multiplier: number
+    created_at?: number
+    updated_at?: number
 }
 
 export type CourseWithExercises = Course & {
     exercises: Exercise[]
+}
+
+export type Task = {
+    id: number
+    user_id: number
+    exercise_id: number
+    first_uploaded_at: string
+    last_uploaded_at: string
+    test_status: string
+    mark: number
+    file: string
+    created_at?: number
+    updated_at?: number
 }
