@@ -17,6 +17,8 @@ use Illuminate\Database\Query\Builder;
  * @property string $test_status
  * @property double $mark
  * @property string $file
+ * @property string $comment
+ * @property string $teacher_comment
  *
  */
 class Task extends Model
@@ -31,7 +33,9 @@ class Task extends Model
         'last_upload_at',
         'test_status',
         'mark',
-        'file'
+        'file',
+        'comment',
+        'teacher_comment',
     ];
 
 

@@ -43,6 +43,8 @@ export type Task = {
     test_status: string
     mark: number
     file: string
+    comment: string
+    teacher_comment: string
     created_at?: number
     updated_at?: number
 }
