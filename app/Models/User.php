@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -16,8 +17,9 @@ use Laravel\Sanctum\HasApiTokens;
  * @property string $phone
  * @property string $login
  * @property string $password
- * @property int    $group_id
- * @property int    $user_type_id
+ * @property int $group_id
+ * @property int $user_type_id
+ * @property UserType $type
  */
 class User extends Authenticatable
 {
@@ -62,15 +64,15 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
-    public function type() : ?UserType {
-        if ($this->user_type_id === null) {
-            return null;
-        }
-        return UserType::find($this->user_type_id);
 
+
+    public function isAdmin() : bool
+    {
+        return $this->type?->code === 'admin';
     }
 
-    public function getTypeCode() : string{
-        return $this->type()?->code ?? 'guest';
+    public function type(): BelongsTo
+    {
+        return $this->belongsTo(UserType::class, 'user_type_id', 'id');
     }
 }

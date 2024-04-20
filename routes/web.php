@@ -18,9 +18,12 @@ use Illuminate\Support\Facades\Route;
 */
 Auth::routes();
 
-Route::get('/{path?}', [MainController::class, 'react'])->name('react');
+Route::get('/', function () {return redirect(\route('reactWithoutRole'));})->name('default');
 
-Route::get('/ssh/test/', [SSHController::class, 'test'])->name('testSSH');
+Route::get('/portal/', [MainController::class, 'reactWithoutRole'])->name('reactWithoutRole');
+Route::get('/portal/{role}/{path?}/', [MainController::class, 'react'])->name('react');
+
+//Route::get('/ssh/test/', [SSHController::class, 'test'])->name('testSSH');
 Route::get('/api/exercises/load/', [StudentController::class, 'loadExercises'])->name('loadExercises');
 
 
