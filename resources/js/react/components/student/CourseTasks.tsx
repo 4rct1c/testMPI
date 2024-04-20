@@ -1,15 +1,9 @@
 import React from 'react'
-import {Task} from "./Task";
+import {Exercise} from "./Exercise";
+import {CourseWithExercises} from "../../types/types";
 
 type Props = {
-    course : {
-        id: number,
-        name: string,
-        tasks: {
-            id: number,
-            title: string
-        }[]
-    },
+    course : CourseWithExercises,
     key: number
 }
 
@@ -19,7 +13,7 @@ function CourseTasks(props : Props) {
             <h4 className="is-size-4">
                 {props.course.name}
             </h4>
-            {props.course.tasks.map(task => <Task task={task}/>)}
+            {props.course.exercises.map(exercise => <Exercise exercise={exercise}/>)}
         </>
     );
 }
