@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Helpers\TestHelper;
 use App\Models\Cluster;
 use App\Models\Task;
 use App\Models\TaskFile;
@@ -12,13 +13,14 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use Spatie\Ssh\Ssh;
 
 class SendAndCheckFileJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected ?TaskFile $file;
+
+    protected TestHelper $helper;
     /**
      * Create a new job instance.
      */
@@ -26,6 +28,7 @@ class SendAndCheckFileJob implements ShouldQueue
     {
         $this->onQueue('send_files');
         $this->file = $this->task->file;
+        $this->helper = new TestHelper($this->cluster, $this->task);
     }
 
     /**
@@ -42,36 +45,30 @@ class SendAndCheckFileJob implements ShouldQueue
 
 
 
-        $uploadProcess = $this->createSshCommand()->upload($filePath, $this->cluster->files_directory);
+        $uploadProcess = $this->helper->createSshCommand()->upload($filePath, $this->cluster->files_directory);
         if (!$uploadProcess->isSuccessful()){
             Log::error('Failed to upload file with id ' . $this->file->id);
             return;
         }
 
-        $compileProcess = $this->createSshCommand()->execute([
+        $compileProcess = $this->helper->createSshCommand()->execute([
             'cd ' . $this->cluster->files_directory,
             $filename
         ]);
 
-        if (strlen($compileProcess->getOutput())){
-            $this->handleCompileError();
+        if (!$compileProcess->isSuccessful()){
+            Log::error('Failed to compile file with id ' . $this->file->id);
             return;
         }
 
-        $executeProcess = $this->createSshCommand()->execute([
-            'cd ' . $this->cluster->files_directory,
-            $filename
-        ]);
+        if (strlen($compileProcess->getOutput())){
+            $this->helper->handleCompilationError($compileProcess->getOutput());
+            return;
+        }
+
+        $this->helper->runTests();
 
     }
 
-    protected function createSshCommand() : Ssh {
-        return Ssh::create($this->cluster->username, $this->cluster->host, $this->cluster->port)
-            ->usePrivateKey('/var/www/.ssh/' .$this->cluster->key_name);
-    }
 
-    protected function handleCompileError() : void
-    {
-
-    }
 }

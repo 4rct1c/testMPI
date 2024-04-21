@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Log;
  * @property double             $deadline_multiplier
  * @property string             $text
  * @property Collection<Task>   $tasks
+ * @property Collection<Test>   $tests
  *
  */
 class Exercise extends Model
@@ -60,6 +61,12 @@ class Exercise extends Model
     public function tasks() : HasMany
     {
         return $this->hasMany(Task::class);
+    }
+
+
+    public function tests() : HasMany
+    {
+        return $this->hasMany(Test::class);
     }
 
 

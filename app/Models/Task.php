@@ -23,6 +23,7 @@ use Illuminate\Database\Query\Builder;
  * @property string     $test_message
  * @property TaskFile   $file
  * @property TestStatus $test_status
+ * @property Exercise   $exercise
  *
  */
 class Task extends Model
@@ -45,6 +46,10 @@ class Task extends Model
 
     public function file() : HasOne {
         return $this->hasOne(TaskFile::class, 'task_id', 'id');
+    }
+
+    public function exercise() : BelongsTo {
+        return $this->belongsTo(Exercise::class);
     }
 
     public function test_status() : BelongsTo {
