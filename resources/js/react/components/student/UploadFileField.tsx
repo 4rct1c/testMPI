@@ -5,39 +5,73 @@ import {getApiRoutes} from "../../main";
 type Props = {
     exerciseId: number
     taskId: number|null
+    updateHandler: Function
 }
 
 const UploadFileField = (props: Props) => {
 
+    const messageInitialState = {
+        show: false,
+        text: '',
+        colorClass: 'has-text-success'
+    }
+
     const [file, setFile] = useState(null)
 
-    const [showWarningMessage, setShowWarningMessage] = useState(false)
+    const [message, setMessage] = useState(messageInitialState)
 
-    const uploadFileAxios = () => {
-        return axios.post(getApiRoutes().upload_file, {
-            exercise_id: props.exerciseId,
-            task_id: props.taskId,
-            file: file
+    const uploadFileAxios = (data) => {
+        return axios({
+            method: 'post',
+            url: getApiRoutes().upload_file,
+            data: data,
+            headers: { 'Content-Type': 'multipart/form-data' }
         })
     }
 
     const uploadFileHandler = () => {
-        if (file !== null) {
-            uploadFileAxios().then(setFile(null))
-            setShowWarningMessage(false)
+        if (file === null) {
+            setMessage({
+                show: true,
+                text: 'Выберете файл',
+                colorClass: 'has-text-warning'
+            })
             return
         }
-        setShowWarningMessage(true)
+        let formData = new FormData()
+        formData.append('answer', file)
+        formData.append('task_id', props.taskId !== null ? props.taskId.toString() : '')
+        formData.append('exercise_id', props.exerciseId.toString())
+        uploadFileAxios(formData).then( response => {
+            setFile(null)
+            if (response.data){
+                setMessage({
+                    show: true,
+                    text: 'Файл загружен',
+                    colorClass: 'has-text-success'
+                })
+                props.updateHandler()
+            } else {
+                setMessage({
+                    show: true,
+                    text: 'Ошибка загрузки',
+                    colorClass: 'has-text-danger'
+                })
+            }
+        })
     }
 
 
-    return <div className="box">
-        <div className="my-2">
-            <input type='file' onChange={event => setFile(event.target.files)}/>
-        </div>
-        <button className="button is-link" onClick={uploadFileHandler}>Загрузить ответ</button>
-        {showWarningMessage ? <p className="has-text-danger">Выберете файл</p> : <></>}
-    </div>
+    return <>
+        <form>
+            <div className="mt-3">
+                <input type='file' name="file" onChange={event => setFile(event.target.files[0])}/>
+            </div>
+        </form>
+        <button className="button is-link my-2" onClick={uploadFileHandler}>Загрузить ответ</button>
+        {message.show ? <p className={message.colorClass}>{message.text}</p> : <></>}
+    </>
+
 }
 
 export {UploadFileField}

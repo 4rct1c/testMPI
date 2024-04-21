@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Helpers\RoutesHelper;
 use App\Models\Exercise;
-use App\Models\ExerciseAttachment;
-use App\Models\Task;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
@@ -37,7 +35,7 @@ class MainController extends Controller
         /** @var User $user */
         $user = Auth::user();
         if ($user->type?->code !== 'student') return $exercise;
-        $task = $exercise->tasks()->where('user_id', $user->id)->get()->first();
+        $task = $exercise->tasks()->where('user_id', $user->id)->with('file')->get()->first();
         $exercise->task = $task;
         return $exercise;
     }

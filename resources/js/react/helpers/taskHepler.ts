@@ -10,6 +10,7 @@ export const getMarkPercentString = (task: Task, exercise: Exercise) => {
 }
 
 export const getMarkInfo = (task: Task, exercise: Exercise) => {
+    if (task.mark === null) return null
     const deadlineWasMissed = task.last_uploaded_at > exercise.deadline
     let score = task.mark
     let description = ''

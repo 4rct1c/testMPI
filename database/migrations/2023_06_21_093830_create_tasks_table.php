@@ -24,7 +24,7 @@ return new class extends Migration
 
             $table->string('test_status')->default('awaiting');
             $table->unsignedDouble('mark')->nullable();
-            $table->string('file');
+            $table->string('file')->nullable();
 
             $table->timestamps();
         });

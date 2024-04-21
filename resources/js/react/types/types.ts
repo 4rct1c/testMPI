@@ -34,6 +34,10 @@ export type ExerciseWithTask = Exercise & {
     task: Task
 }
 
+export type ExerciseWithTaskAndFile = Exercise & {
+    task: TaskWithFile
+}
+
 export type Task = {
     id: number
     user_id: number
@@ -42,9 +46,23 @@ export type Task = {
     last_uploaded_at: string
     test_status: string
     mark: number
-    file: string
     comment: string
     teacher_comment: string
     created_at?: number
     updated_at?: number
+}
+
+export type TaskFile = {
+    id: number
+    task_id: number
+    original_name: string
+    generated_name: string
+    extension: string
+    size: number
+    created_at?: string
+    updated_at?: string
+}
+
+export type TaskWithFile = Task & {
+    file: TaskFile
 }

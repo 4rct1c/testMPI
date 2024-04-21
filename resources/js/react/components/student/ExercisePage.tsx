@@ -19,10 +19,14 @@ const ExercisePage = () => {
         return axios.get(getApiRoutes().load_exercise + '/' + exerciseId)
     }
 
-    useEffect(() => {
+    const loadExercise = () => {
         loadExerciseAxios().then(r => {
             setExercise(r.data)
         })
+    }
+
+    useEffect(() => {
+        loadExercise()
     }, [])
 
     useEffect(() => {
@@ -42,7 +46,8 @@ const ExercisePage = () => {
             </div>
             <div className="column is-one-third-desktop">
                 <div className="box theme-light">
-                    <TaskFieldsBlock task={taskWasUploaded ? exercise.task : null} exercise={exercise}/>
+                    <TaskFieldsBlock task={taskWasUploaded ? exercise.task : null}
+                                     exercise={exercise} updateHandler={loadExercise}/>
                 </div>
             </div>
         </div>
