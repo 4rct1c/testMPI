@@ -9,15 +9,6 @@ use Illuminate\Support\Facades\Auth;
 
 class MainController extends Controller
 {
-
-    public function reactWithoutRole()
-    {
-        /** @var User $user */
-        $user = Auth::user();
-        $userTypeCode = $user->type?->code ?? 'guest';
-        return redirect(route('react', ['role' => $userTypeCode]));
-    }
-
     public function react()
     {
         /** @var User $user */
@@ -35,7 +26,7 @@ class MainController extends Controller
         /** @var User $user */
         $user = Auth::user();
         if ($user->type?->code !== 'student') return $exercise;
-        $task = $exercise->tasks()->where('user_id', $user->id)->with('file')->get()->first();
+        $task = $exercise->tasks()->with('test_status')->where('user_id', $user->id)->with('file')->get()->first();
         $exercise->task = $task;
         return $exercise;
     }

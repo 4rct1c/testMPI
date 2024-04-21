@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Query\Builder;
 
@@ -15,11 +16,13 @@ use Illuminate\Database\Query\Builder;
  * @property int        $exercise_id
  * @property string     $first_upload_at
  * @property string     $last_upload_at
- * @property string     $test_status
  * @property double     $mark
  * @property string     $comment
  * @property string     $teacher_comment
+ * @property int        $test_status_id
+ * @property string     $test_message
  * @property TaskFile   $file
+ * @property TestStatus $test_status
  *
  */
 class Task extends Model
@@ -32,15 +35,20 @@ class Task extends Model
         'exercise_id',
         'first_upload_at',
         'last_upload_at',
-        'test_status',
         'mark',
         'file',
         'comment',
         'teacher_comment',
+        'test_status_id',
+        'test_message',
     ];
 
     public function file() : HasOne {
         return $this->hasOne(TaskFile::class, 'task_id', 'id');
+    }
+
+    public function test_status() : BelongsTo {
+        return $this->belongsTo(TestStatus::class, 'test_status_id', 'id');
     }
 
 

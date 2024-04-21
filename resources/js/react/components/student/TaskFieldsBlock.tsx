@@ -1,14 +1,14 @@
-import {Exercise, Task} from "../../types/types";
+import {Exercise, TaskWithTestStatus} from "../../types/types";
 import {BulmaLevel} from "../BulmaLevel";
 import {BulmaField} from "../BulmaField";
 import {UploadFileField} from "./UploadFileField";
-import {getMarkInfo, getTestStatusString} from "../../helpers/taskHepler";
+import {getMarkInfo} from "../../helpers/taskHepler";
 import {dateForHumans} from "../../helpers/dateHepter";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faPencil} from "@fortawesome/free-solid-svg-icons";
 
 type Props = {
-    task: Task | null
+    task: TaskWithTestStatus | null
     exercise: Exercise
     updateHandler: Function
 }
@@ -41,7 +41,7 @@ const TaskFieldsBlock = (props: Props) => {
 
     return <div className="m-2">
         <BulmaLevel label="Дата сдачи" value={taskNotNull ? dateForHumans(props.task.last_uploaded_at) : null}/>
-        <BulmaLevel label="Статус проверки" value={taskNotNull ? getTestStatusString(props.task) : null}/>
+        <BulmaLevel label="Статус проверки" value={taskNotNull ? props.task.test_status.label : null}/>
         <BulmaLevel label="Оценка" value={taskNotNull ? getMarkInfo(props.task, props.exercise) : null}/>
         <BulmaField label="Комментарий преподавателя" value={taskNotNull ? props.task.teacher_comment : null}/>
         {viewCommentField()}

@@ -1,12 +1,12 @@
 import React from 'react'
-import {Exercise as ExerciseType, Task} from "../../types/types";
+import {Exercise as ExerciseType, TaskWithTestStatus} from "../../types/types";
 import {useNavigate} from "react-router-dom";
 import {dateForHumans} from "../../helpers/dateHepter";
-import {getMarkPercentString, getTestStatusString} from "../../helpers/taskHepler";
+import {getMarkPercentString} from "../../helpers/taskHepler";
 
 type Props = {
     exercise: ExerciseType
-    task: Task|undefined
+    task: TaskWithTestStatus|undefined
     key: number
 }
 
@@ -25,9 +25,14 @@ function ExerciseItem(props : Props) {
         mark: null
     })
 
+    const getTestStatusLabel = () => {
+        if (props.task === undefined || props.task.test_status === null) return '—'
+        return props.task.test_status.label
+    }
+
     const getMark = () => {
         if (props.task === undefined) return null
-        return props.task.mark === null ? getTestStatusString(props.task) : getMarkPercentString(props.task, props.exercise)
+        return props.task.mark === null ? getTestStatusLabel() : getMarkPercentString(props.task, props.exercise)
     }
 
     return (

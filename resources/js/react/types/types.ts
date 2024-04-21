@@ -10,8 +10,8 @@ export type Course = {
     group_id: number
     teacher_id: number
     name: string
-    created_at?: number
-    updated_at?: number
+    created_at?: string
+    updated_at?: string
 }
 
 export type CourseWithExercises = Course & {
@@ -26,8 +26,8 @@ export type Exercise = {
     deadline: string
     deadline_multiplier: number
     text: string
-    created_at?: number
-    updated_at?: number
+    created_at?: string
+    updated_at?: string
 }
 
 export type ExerciseWithTask = Exercise & {
@@ -44,13 +44,26 @@ export type Task = {
     exercise_id: number
     first_uploaded_at: string
     last_uploaded_at: string
-    test_status: string
     mark: number
     comment: string
     teacher_comment: string
-    created_at?: number
-    updated_at?: number
+    test_status_id: number
+    created_at?: string
+    updated_at?: string
 }
+
+export type TestStatus = {
+    id: number
+    code: string
+    label: string
+    created_at?: string
+    updated_at?: string
+}
+
+export type TaskWithTestStatus = Task & {
+    test_status: TestStatus
+}
+
 
 export type TaskFile = {
     id: number

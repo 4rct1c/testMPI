@@ -1,12 +1,12 @@
 import React, {useState} from 'react'
 import {ExerciseItem} from "./ExerciseItem";
-import {CourseWithExercises, Task} from "../../types/types";
+import {CourseWithExercises, TaskWithTestStatus} from "../../types/types";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCaretDown, faCaretUp} from "@fortawesome/free-solid-svg-icons";
 
 type Props = {
     course: CourseWithExercises
-    tasks: Task[]
+    tasks: TaskWithTestStatus[]
     key: number
 }
 

@@ -30,7 +30,7 @@ class StudentController extends Controller
     {
         /** @var User $user */
         $user = Auth::user();
-        return $user->tasks ?? Collection::empty();
+        return $user->tasks()->with('test_status')->get() ?? Collection::empty();
     }
 
     public function uploadFile(Request $request): bool

@@ -20,12 +20,3 @@ export const getMarkInfo = (task: Task, exercise: Exercise) => {
     }
     return score  + '/' + exercise.max_score + description
 }
-
-export const getTestStatusString = (task: Task) => {
-    return {
-        awaiting: 'Ожидает проверки',
-        tested: 'Протестировано',
-        appeal: 'На перепроверке',
-        approved: 'Подтверждено'
-    }[task.test_status] ?? null
-}
