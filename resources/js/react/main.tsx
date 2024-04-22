@@ -39,12 +39,12 @@ const getRoutes = (chosenRole : string | null = null) : {path: string, element: 
             })
             routes.push({
                 path: prefix + 'exercise',
-                element: <ExercisePage/>,
+                element: <ExercisePage editable={false}/>,
                 errorElement: <ErrorPage/>,
                 children: [
                     {
                         path: prefix + 'exercise/:id',
-                        element: <ExercisePage/>,
+                        element: <ExercisePage editable={false}/>,
                         errorElement: <ErrorPage/>
                     }
                 ]

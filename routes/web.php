@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\MainController;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\TeacherController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -30,5 +31,7 @@ Route::post('/api/file/upload/', [StudentController::class, 'uploadFile'])->name
 
 Route::get('/api/exercise/load/{id?}', [MainController::class, 'loadExercise'])->name('loadExercise');
 Route::get('/api/user/load/', [MainController::class, 'loadUser'])->name('loadUser');
+
+Route::put('/api/exercise/update/', [TeacherController::class, 'updateExerciseText'])->name('updateExerciseText');
 
 //Route::get('/home', [HomeController::class, 'index'])->name('home');

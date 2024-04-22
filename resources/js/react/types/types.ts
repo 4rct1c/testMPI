@@ -4,6 +4,7 @@ export type ApiRoutes = {
     load_exercise: string
     upload_file: string
     load_user: string
+    update_exercise_text: string
 }
 
 export type Course = {
