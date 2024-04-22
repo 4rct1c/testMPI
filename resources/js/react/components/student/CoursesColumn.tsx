@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import {CourseExercises} from "./CourseExercises";
+import {CourseExercises} from "../common/CourseExercises";
 import axios from "axios";
 import {getApiRoutes} from "../../main";
 

@@ -7,6 +7,7 @@ const SAMPLE_READ_ONLY_LOCK_ID = 'Integration Sample';
 type EditorDemoProps = {
     content: string;
     changeValue: Function
+    editable: boolean
 };
 
 type EditorDemoState = {
@@ -114,6 +115,8 @@ export default function Editor( props: EditorDemoProps ): JSX.Element {
             <CKEditor
                 editor={ ClassicEditor }
                 id={ state.documentID }
+                config={props.editable ? {} : {toolbar: {items: []}}}
+                disabled={!props.editable}
                 disableWatchdog={ isWatchdogDisabled }
                 data={ state.documents[ state.documentID ] }
                 watchdogConfig={ { crashNumberLimit: 10 } }

@@ -15,18 +15,28 @@ const CourseExercises = (props: Props) => {
 
     const [showExercises, setShowExercises] = useState(false)
 
+    const studentThead = () => {
+        return <tr>
+            <th width={'55%'}>Наименование</th>
+            <th width={'15%'}>Крайний срок</th>
+            <th width={'15%'}>Загружено</th>
+            <th width={'15%'}>Оценка</th>
+        </tr>
+    }
+
+    const teacherThead = () => {
+        return <tr>
+            <th width={'75%'}>Наименование</th>
+            <th width={'25%'}>Крайний срок</th>
+        </tr>
+    }
+
     const viewExercisesList = () => {
         if (!showExercises) return <></>
         return (
             <table className="table">
                 <thead>
-                <tr>
-                    <th>Наименование</th>
-                    <th>Крайний срок</th>
-                    {props.showTasks ? (<>
-                            <th>Загружено</th>
-                        <th>Оценка</th></>) : <></>}
-                </tr>
+                {props.showTasks ? studentThead() : teacherThead()}
                 </thead>
                 <tbody>
                 {props.course.exercises.sort((a, b) => (a.deadline > b.deadline) ? 1 : ((b.deadline > a.deadline) ? -1 : 0))

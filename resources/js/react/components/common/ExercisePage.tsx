@@ -2,7 +2,7 @@ import {useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import axios from "axios";
 import {getApiRoutes} from "../../main";
-import {TaskFieldsBlock} from "./TaskFieldsBlock";
+import {TaskFieldsBlock} from "../student/TaskFieldsBlock";
 import Editor from "../Editor";
 
 type Props = {
@@ -58,11 +58,6 @@ const ExercisePage = (props: Props) => {
         changeText(originalText)
     }
 
-    const viewEditor = () => {
-        if (!props.editable) return <div dangerouslySetInnerHTML={{__html: exercise.text}}></div>
-        return <Editor content={exercise.text} changeValue={changeText}/>
-    }
-
     const viewControls = () => {
         if (!props.editable) return <></>
         return <div className="is-flex my-2">
@@ -79,7 +74,7 @@ const ExercisePage = (props: Props) => {
         return <div className="mx-4">
                 <div className="box theme-light">
                     <h3 className="is-size-3 m-2">{exercise.title}</h3>
-                    {viewEditor()}
+                    <Editor content={exercise.text} changeValue={changeText} editable={true}/>
                     {viewControls()}
                 </div>
         </div>
@@ -91,6 +86,7 @@ const ExercisePage = (props: Props) => {
             <div className="column is-two-thirds-desktop">
                 <div className="box theme-light">
                     <h3 className="is-size-3 m-2">{exercise.title}</h3>
+                    <Editor content={exercise.text} changeValue={changeText} editable={false}/>
                 </div>
             </div>
             <div className="column is-one-third-desktop">

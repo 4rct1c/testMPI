@@ -9,7 +9,7 @@ import {StudentPage} from "./Components"
 import {TeacherPage} from "./Components"
 import {AdminPage} from "./Components"
 import {ApiRoutes} from "./types/types";
-import {ExercisePage} from "./components/student/ExercisePage";
+import {ExercisePage} from "./components/common/ExercisePage";
 
 declare global {
     const role: string

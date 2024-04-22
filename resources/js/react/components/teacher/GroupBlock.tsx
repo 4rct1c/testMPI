@@ -1,5 +1,5 @@
 import {GroupWithCourses} from "../../types/types";
-import {CourseExercises} from "../student/CourseExercises";
+import {CourseExercises} from "../common/CourseExercises";
 
 type Props = {
     group: GroupWithCourses

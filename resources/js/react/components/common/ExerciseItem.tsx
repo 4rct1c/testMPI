@@ -32,7 +32,7 @@ function ExerciseItem(props : Props) {
     }
 
     const getMark = () => {
-        if (props.task === undefined) return null
+        if (props.task === undefined) return '—'
         return props.task.mark === null ? getTestStatusLabel() : getMarkPercentString(props.task, props.exercise)
     }
 
