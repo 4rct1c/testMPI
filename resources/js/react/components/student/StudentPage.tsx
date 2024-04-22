@@ -1,7 +1,7 @@
 import {CoursesColumn} from "./CoursesColumn"
+import {StudentInfoCard} from "./StudentInfoCard";
 
 function StudentPage() {
-
 
     return (
         <div className="columns is-fullwidth mx-4">
@@ -9,10 +9,7 @@ function StudentPage() {
                 <CoursesColumn/>
             </div>
             <div className="column is-one-fifth-desktop">
-                <div className="box theme-light">
-                    Info block
-                </div>
-
+                <StudentInfoCard/>
             </div>
         </div>
     );

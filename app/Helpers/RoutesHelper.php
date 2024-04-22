@@ -13,6 +13,7 @@ class RoutesHelper
             'load_tasks' => route(name: 'loadTasks', absolute: false),
             'load_exercise' => route(name: 'loadExercise', absolute: false),
             'upload_file' => route(name: 'uploadFile', absolute: false),
+            'load_user' => route(name: 'loadUser', absolute: false),
         ];
     }
 }

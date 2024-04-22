@@ -3,6 +3,7 @@ export type ApiRoutes = {
     load_tasks: string
     load_exercise: string
     upload_file: string
+    load_user: string
 }
 
 export type Course = {
@@ -78,4 +79,22 @@ export type TaskFile = {
 
 export type TaskWithFile = Task & {
     file: TaskFile
+}
+
+export type TaskWithTestStatusAndFile = TaskWithTestStatus & TaskWithFile
+
+export type User = {
+    id: number
+    name: string
+    second_name: string|null
+    last_name: string
+    email?: string|null
+    email_verified_at?: string|null
+    phone: string|null
+    login: string
+    remember_token?: string
+    group_id: number|null
+    user_type_id: number
+    created_at?: string
+    updated_at?: string
 }

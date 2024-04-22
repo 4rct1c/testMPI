@@ -30,4 +30,9 @@ class MainController extends Controller
         $exercise->task = $task;
         return $exercise;
     }
+
+    public function loadUser() : User
+    {
+        return User::where('id', Auth::user()->id)->with('group')->get()->first();
+    }
 }
