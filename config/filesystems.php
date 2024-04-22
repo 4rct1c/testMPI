@@ -44,6 +44,14 @@ return [
             'throw' => false,
         ],
 
+        'tasks' => [
+            'driver' => 'local',
+            'root' => storage_path('app/tasks'),
+            'url' => env('APP_URL').'/labs-storage',
+            'visibility' => 'public',
+            'throw' => false,
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),
@@ -71,7 +79,7 @@ return [
 
     'links' => [
         public_path('storage') => storage_path('app/public'),
-        public_path('storage_tasks') => storage_path('app/tasks'),
+        public_path('labs-storage') => storage_path('app/tasks'),
     ],
 
 ];

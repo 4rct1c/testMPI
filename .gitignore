@@ -2,7 +2,7 @@
 /node_modules
 /public/hot
 /public/storage
-/public/storage_tasks
+/public/labs-storage
 /storage
 /storage/*.key
 /vendor

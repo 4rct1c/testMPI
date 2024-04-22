@@ -23,7 +23,7 @@ use Illuminate\Support\Facades\Storage;
 class TaskFile extends Model
 {
 
-    public const DIRECTORY = 'answers/';
+    public const DIRECTORY = 'tasks/';
 
     public $table = 'tasks_files';
 

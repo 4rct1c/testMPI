@@ -54,7 +54,7 @@ class StudentController extends Controller
         $file = $request->file('answer');
         $generatedName = Str::uuid()->toString();
         $extension = $file->extension();
-        $file->storeAs("answers/$generatedName.$extension");
+        $file->storeAs( TaskFile::DIRECTORY . $generatedName.$extension);
         try{
             $taskFile = new TaskFile([
                 'task_id'        => $task->id,
