@@ -1,18 +1,17 @@
 import React from 'react'
+import {GroupsColumn} from "./GroupsColumn";
 
 function TeacherPage() {
-    return (
-        <div className="container">
-            <div className="row justify-content-center">
-                <div className="col-md-8">
-                    <div className="card">
-                        <div className="card-header">TeacherPage Component</div>
-
-                        <div className="card-body">I'm an example component!</div>
-                    </div>
-                </div>
+    return (/*
+        <div className="columns is-fullwidth mx-4">
+            <div className="column is-four-fifths-desktop">
+                <GroupsColumn/>
             </div>
-        </div>
+            <div className="column is-one-fifth-desktop">
+                hey
+            </div>
+        </div>*/
+        <GroupsColumn/>
     );
 }
 

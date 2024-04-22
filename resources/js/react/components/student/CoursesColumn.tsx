@@ -34,7 +34,9 @@ function CoursesColumn() {
             <div className="m-2">
                 {courses.map(course => <CourseExercises key={course.id}
                                                         course={course}
-                                                        tasks={tasks}/>)}
+                                                        tasks={tasks}
+                                                        showTasks={true}
+                />)}
             </div>
         </div>
     );

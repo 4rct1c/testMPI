@@ -5,6 +5,7 @@ export type ApiRoutes = {
     upload_file: string
     load_user: string
     update_exercise_text: string
+    load_groups: string
 }
 
 export type Course = {
@@ -98,4 +99,14 @@ export type User = {
     user_type_id: number
     created_at?: string
     updated_at?: string
+}
+
+export type Group = {
+    id: number
+    code: string
+    name: string
+}
+
+export type GroupWithCourses = Group & {
+    courses: CourseWithExercises[]
 }

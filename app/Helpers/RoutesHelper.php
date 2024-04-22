@@ -14,6 +14,7 @@ class RoutesHelper
             'upload_file' => route(name: 'uploadFile', absolute: false),
             'load_user' => route(name: 'loadUser', absolute: false),
             'update_exercise_text' => route(name: 'updateExerciseText', absolute: false),
+            'load_groups' => route(name: 'loadGroups', absolute: false),
         ];
     }
 }

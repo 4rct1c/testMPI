@@ -56,6 +56,18 @@ const getRoutes = (chosenRole : string | null = null) : {path: string, element: 
                 element: <TeacherPage/>,
                 errorElement: <ErrorPage/>
             })
+            routes.push({
+                path: prefix + 'exercise',
+                element: <ExercisePage editable={true}/>,
+                errorElement: <ErrorPage/>,
+                children: [
+                    {
+                        path: prefix + 'exercise/:id',
+                        element: <ExercisePage editable={true}/>,
+                        errorElement: <ErrorPage/>
+                    }
+                ]
+            })
             break
         case 'admin':
             routes.push({

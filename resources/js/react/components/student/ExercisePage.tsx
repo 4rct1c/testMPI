@@ -47,9 +47,9 @@ const ExercisePage = (props: Props) => {
 
     const applyHandler = () => {
         if (!props.editable) return
-        updateExerciseTextAxios().then(r => {
+        updateExerciseTextAxios().then(() => {
             setOriginalText(exercise.text)
-        }, e => {
+        }, () => {
             changeText(originalText)
         })
     }
@@ -75,6 +75,33 @@ const ExercisePage = (props: Props) => {
         </div>
     }
 
+    const teacherView = () => {
+        return <div className="mx-4">
+                <div className="box theme-light">
+                    <h3 className="is-size-3 m-2">{exercise.title}</h3>
+                    {viewEditor()}
+                    {viewControls()}
+                </div>
+        </div>
+
+    }
+
+    const studentView = () => {
+        return <div className="columns mx-4">
+            <div className="column is-two-thirds-desktop">
+                <div className="box theme-light">
+                    <h3 className="is-size-3 m-2">{exercise.title}</h3>
+                </div>
+            </div>
+            <div className="column is-one-third-desktop">
+                <div className="box theme-light">
+                    <TaskFieldsBlock task={taskWasUploaded ? exercise.task : null}
+                                     exercise={exercise} updateHandler={loadExercise}/>
+                </div>
+            </div>
+        </div>
+    }
+
     useEffect(() => {
         loadExercise()
     }, [])
@@ -86,23 +113,7 @@ const ExercisePage = (props: Props) => {
 
     if (exercise === undefined) return <></>
 
-    return (
-        <div className="columns mx-4">
-            <div className="column is-two-thirds-desktop">
-                <div className="box theme-light">
-                    <h3 className="is-size-3 m-2">{exercise.title}</h3>
-                    {viewEditor()}
-                    {viewControls()}
-                </div>
-            </div>
-            <div className="column is-one-third-desktop">
-                <div className="box theme-light">
-                    <TaskFieldsBlock task={taskWasUploaded ? exercise.task : null}
-                                     exercise={exercise} updateHandler={loadExercise}/>
-                </div>
-            </div>
-        </div>
-    )
+    return props.editable ? teacherView() : studentView()
 }
 
 export {ExercisePage}

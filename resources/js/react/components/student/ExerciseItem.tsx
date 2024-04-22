@@ -8,6 +8,7 @@ type Props = {
     exercise: ExerciseType
     task: TaskWithTestStatus|undefined
     key: number
+    showTask: boolean
 }
 
 function ExerciseItem(props : Props) {
@@ -39,8 +40,8 @@ function ExerciseItem(props : Props) {
         <tr className="is-hoverable is-clickable" onClick={handleTaskLink}>
             <td>{props.exercise.title}</td>
             <td>{dateForHumans(props.exercise.deadline)}</td>
-            <td>{dateForHumans(taskInfo.last_uploaded_at)}</td>
-            <td>{getMark()}</td>
+            {props.showTask ? (<><td>{dateForHumans(taskInfo.last_uploaded_at)}</td>
+                <td>{getMark()}</td></>) : <></>}
         </tr>
     );
 }

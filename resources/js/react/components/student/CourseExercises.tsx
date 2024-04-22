@@ -8,6 +8,7 @@ type Props = {
     course: CourseWithExercises
     tasks: TaskWithTestStatus[]
     key: number
+    showTasks: boolean
 }
 
 const CourseExercises = (props: Props) => {
@@ -22,8 +23,9 @@ const CourseExercises = (props: Props) => {
                 <tr>
                     <th>Наименование</th>
                     <th>Крайний срок</th>
-                    <th>Загружено</th>
-                    <th>Оценка</th>
+                    {props.showTasks ? (<>
+                            <th>Загружено</th>
+                        <th>Оценка</th></>) : <></>}
                 </tr>
                 </thead>
                 <tbody>
@@ -31,6 +33,7 @@ const CourseExercises = (props: Props) => {
                     .map(exercise => <ExerciseItem exercise={exercise}
                                                    key={exercise.id}
                                                    task={props.tasks.filter(task => task.exercise_id === exercise.id)[0]}
+                                                   showTask={props.showTasks}
                     />)}
                 </tbody>
             </table>
