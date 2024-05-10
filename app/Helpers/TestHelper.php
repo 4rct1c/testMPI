@@ -54,6 +54,11 @@ class TestHelper
         return false;
     }
 
+    public static function getCompileCommand(string $filename) : string
+    {
+        return $filename;
+    }
+
     protected function handleExecuteResponse(Process $process, Test $test) : ?bool
     {
         if (!$process->isSuccessful()){

@@ -53,7 +53,7 @@ class SendAndCheckFileJob implements ShouldQueue
 
         $compileProcess = $this->helper->createSshCommand()->execute([
             'cd ' . $this->cluster->files_directory,
-            $filename
+            TestHelper::getCompileCommand($filename)
         ]);
 
         if (!$compileProcess->isSuccessful()){
