@@ -1,14 +1,14 @@
 import React from 'react'
-import {Exercise as ExerciseType, TaskWithTestStatus} from "../../types/types";
+import {Exercise as ExerciseType, ExerciseWithTaskCounters, TaskWithTestStatus} from "../../types/types";
 import {useNavigate} from "react-router-dom";
 import {dateForHumans} from "../../helpers/dateHepter";
 import {getMarkPercentString} from "../../helpers/taskHepler";
 
 type Props = {
-    exercise: ExerciseType
+    exercise: ExerciseType|ExerciseWithTaskCounters
     task: TaskWithTestStatus|undefined
     key: number
-    showTask: boolean
+    teacherMode: boolean
 }
 
 function ExerciseItem(props : Props) {
@@ -36,12 +36,32 @@ function ExerciseItem(props : Props) {
         return props.task.mark === null ? getTestStatusLabel() : getMarkPercentString(props.task, props.exercise)
     }
 
+    const teacherFields = () => {
+        if (!('loaded_tasks' in props.exercise)){
+            return <></>
+        }
+        return <>
+            <td>
+                <span>{props.exercise.loaded_tasks}/{props.exercise.students_count} (</span>
+                <span className="has-text-success">{props.exercise.succeeded_tasks}</span>/
+                <span className="has-text-danger">{props.exercise.failed_tasks}</span>/
+                <span className="has-text-warning">{props.exercise.awaiting_tasks}</span>)
+            </td>
+        </>
+    }
+
+    const studentFields = () => {
+        return <>
+            <td>{dateForHumans(taskInfo.last_uploaded_at)}</td>
+            <td>{getMark()}</td>
+        </>
+    }
+
     return (
         <tr className="is-hoverable is-clickable" onClick={handleTaskLink}>
             <td>{props.exercise.title}</td>
             <td>{dateForHumans(props.exercise.deadline)}</td>
-            {props.showTask ? (<><td>{dateForHumans(taskInfo.last_uploaded_at)}</td>
-                <td>{getMark()}</td></>) : <></>}
+            {props.teacherMode ? teacherFields() : studentFields()}
         </tr>
     );
 }

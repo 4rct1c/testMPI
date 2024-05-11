@@ -15,6 +15,7 @@ use Illuminate\Support\Collection;
  * @property string $name
  *
  * @property Collection<Course> $courses
+ * @property Collection<User> $students
  *
  */
 class Group extends Model
@@ -30,6 +31,11 @@ class Group extends Model
     public function courses(): HasMany
     {
         return $this->hasMany(Course::class);
+    }
+
+    public function students(): HasMany
+    {
+        return $this->hasMany(User::class, 'group_id', 'id');
     }
 
 

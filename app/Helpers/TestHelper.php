@@ -49,11 +49,13 @@ class TestHelper
         }
     }
 
+    //Todo: write real handler
     public static function executeResponseIsError() : bool
     {
         return false;
     }
 
+    //Todo: write real command
     public static function getCompileCommand(string $filename) : string
     {
         return $filename;

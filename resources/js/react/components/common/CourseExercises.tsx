@@ -8,7 +8,7 @@ type Props = {
     course: CourseWithExercises
     tasks: TaskWithTestStatus[]
     key: number
-    showTasks: boolean
+    teacherMode: boolean
 }
 
 const CourseExercises = (props: Props) => {
@@ -26,8 +26,9 @@ const CourseExercises = (props: Props) => {
 
     const teacherThead = () => {
         return <tr>
-            <th width={'75%'}>Наименование</th>
+            <th width={'55%'}>Наименование</th>
             <th width={'25%'}>Крайний срок</th>
+            <th width={'20%'}><abbr title="загружено / всего студентов (успешно / провалено / ожидает)">Загружено</abbr></th>
         </tr>
     }
 
@@ -36,14 +37,14 @@ const CourseExercises = (props: Props) => {
         return (
             <table className="table">
                 <thead>
-                {props.showTasks ? studentThead() : teacherThead()}
+                {props.teacherMode ? teacherThead() : studentThead()}
                 </thead>
                 <tbody>
                 {props.course.exercises.sort((a, b) => (a.deadline > b.deadline) ? 1 : ((b.deadline > a.deadline) ? -1 : 0))
                     .map(exercise => <ExerciseItem exercise={exercise}
                                                    key={exercise.id}
                                                    task={props.tasks.filter(task => task.exercise_id === exercise.id)[0]}
-                                                   showTask={props.showTasks}
+                                                   teacherMode={props.teacherMode}
                     />)}
                 </tbody>
             </table>

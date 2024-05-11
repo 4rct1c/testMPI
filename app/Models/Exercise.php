@@ -49,12 +49,34 @@ class Exercise extends Model
 
     public function awaitingTasks() : Collection
     {
-        $awaitingStatus = TestStatus::where('code', TestStatus::AWAITING_TEST_STATUS)->get()->first();
-        if ($awaitingStatus === null) {
-            Log::error("Awaiting test status isn't set");
+        return $this->tasksByTestStatus(TestStatus::AWAITING_TEST_STATUS);
+    }
+
+
+    public function succeededTasks() : Collection
+    {
+        return $this->tasksByTestStatus(TestStatus::SUCCESS_STATUS);
+    }
+
+
+    public function failedTasks() : Collection
+    {
+        $result = $this->tasksByTestStatus(TestStatus::WRONG_ANSWER);
+        $result->merge($this->tasksByTestStatus(TestStatus::COMPILATION_ERROR_STATUS));
+        $result->merge($this->tasksByTestStatus(TestStatus::RUNTIME_ERROR_STATUS));
+        $result->merge($this->tasksByTestStatus(TestStatus::RUNTIME_EXCEEDED));
+        return $result;
+    }
+
+
+    public function tasksByTestStatus(string $testStatus) : Collection
+    {
+        $statusRecord = TestStatus::where('code', $testStatus)->get()->first();
+        if ($statusRecord === null) {
+            Log::error("Test status '$testStatus' isn't set");
             return Collection::empty();
         }
-        return $this->tasks()->where('test_status_id', $awaitingStatus->id)->orderBy('last_uploaded_at')->get();
+        return $this->tasks()->where('test_status_id', $statusRecord->id)->orderBy('last_uploaded_at')->get();
     }
 
 

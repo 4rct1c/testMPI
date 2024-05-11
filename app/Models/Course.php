@@ -12,10 +12,12 @@ use Illuminate\Database\Eloquent\Collection;
  * @mixin Builder
  * @mixin \Illuminate\Database\Query\Builder
  *
- * @property int    $id
- * @property int    $teacher_id
- * @property string $name
- * @property Collection<Exercise> $exercises
+ * @property int                    $id
+ * @property int                    $teacher_id
+ * @property string                 $name
+ * @property Group                  $group
+ * @property Collection<User>       $students
+ * @property Collection<Exercise>   $exercises
  *
  */
 class Course extends Model
@@ -37,6 +39,11 @@ class Course extends Model
     public function group(): BelongsTo
     {
         return $this->belongsTo(Group::class);
+    }
+
+    public function students(): HasMany
+    {
+        return $this->group->students();
     }
 
 

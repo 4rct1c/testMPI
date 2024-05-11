@@ -33,6 +33,14 @@ export type Exercise = {
     updated_at?: string
 }
 
+export type ExerciseWithTaskCounters = Exercise & {
+    loaded_tasks: number
+    failed_tasks: number
+    succeeded_tasks: number
+    awaiting_tasks: number
+    students_count: number
+}
+
 export type ExerciseWithTask = Exercise & {
     task: Task
 }

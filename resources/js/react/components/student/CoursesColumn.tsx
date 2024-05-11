@@ -35,7 +35,7 @@ function CoursesColumn() {
                 {courses.map(course => <CourseExercises key={course.id}
                                                         course={course}
                                                         tasks={tasks}
-                                                        showTasks={true}
+                                                        teacherMode={false}
                 />)}
             </div>
         </div>
