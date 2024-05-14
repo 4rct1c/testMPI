@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import {CourseExercises} from "../common/CourseExercises";
+import {CourseExercises} from "./CourseExercises";
 import axios from "axios";
 import {getApiRoutes} from "../../main";
 
@@ -35,7 +35,6 @@ function CoursesColumn() {
                 {courses.map(course => <CourseExercises key={course.id}
                                                         course={course}
                                                         tasks={tasks}
-                                                        teacherMode={false}
                 />)}
             </div>
         </div>

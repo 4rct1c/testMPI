@@ -22,8 +22,8 @@ export type CourseWithExercises = Course & {
     exercises: Exercise[]
 }
 
-export type CourseWithExercisesAndTasks = Course & {
-    exercises: ExerciseWithTasksWithTestStatusAndFile[]
+export type CourseWithExercisesTeacher = Course & {
+    exercises: TeacherExerciseType[]
 }
 
 export type Exercise = {
@@ -46,13 +46,8 @@ export type ExerciseWithTaskCounters = Exercise & {
     students_count: number
 }
 
-export type ExerciseWithTask = Exercise & {
-    task: Task
-}
+export type TeacherExerciseType = ExerciseWithTaskCounters & ExerciseWithTasksWithTestStatusAndFile
 
-export type ExerciseWithTaskAndFile = Exercise & {
-    task: TaskWithFile
-}
 
 export type ExerciseWithTaskTestStatusAndFile = Exercise & {
     task: TaskWithTestStatusAndFile
@@ -134,5 +129,5 @@ export type Group = {
 }
 
 export type GroupWithCourses = Group & {
-    courses: CourseWithExercises[]
+    courses: CourseWithExercisesTeacher[]
 }
