@@ -25,9 +25,12 @@ class MainController extends Controller
         if ($exercise === null) return null;
         /** @var User $user */
         $user = Auth::user();
-        if ($user->type?->code !== 'student') return $exercise;
-        $task = $exercise->tasks()->with('test_status')->where('user_id', $user->id)->with('file')->get()->first();
-        $exercise->task = $task;
+        if ($user->type?->code === 'student') {
+            $task = $exercise->tasks()->with('test_status')->where('user_id', $user->id)->with('file')->get()->first();
+            $exercise->task = $task;
+            return $exercise;
+        }
+        $exercise->tasks = $exercise->tasks()->with('test_status')->with('file')->get();
         return $exercise;
     }
 

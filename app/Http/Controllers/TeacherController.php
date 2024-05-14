@@ -46,6 +46,7 @@ class TeacherController extends Controller
                     $exercise->students_count = $students_count;
                     foreach ($exercise->tasks as $task){
                         $task->file;
+                        $task->test_status;
                     }
                 }
             }
