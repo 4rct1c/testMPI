@@ -1,12 +1,12 @@
 import {ExerciseBlock} from "../common/ExerciseBlock";
-import {Exercise} from "../../types/types";
+import {ExerciseWithTaskTestStatusAndFile} from "../../types/types";
 
 type Props = {
-    exercise: Exercise
+    exercise: ExerciseWithTaskTestStatusAndFile
     setExercise: Function
 }
 
-const ExercisePage = (props: Props) => {
+const EditExercisePage = (props: Props) => {
 
 
     return <div className="columns mx-4">
@@ -16,5 +16,5 @@ const ExercisePage = (props: Props) => {
     </div>
 }
 
-export {ExercisePage}
+export {EditExercisePage}
 

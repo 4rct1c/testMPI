@@ -24,6 +24,7 @@ use Illuminate\Database\Query\Builder;
  * @property TaskFile   $file
  * @property TestStatus $test_status
  * @property Exercise   $exercise
+ * @property User       $user
  *
  */
 class Task extends Model
@@ -54,6 +55,10 @@ class Task extends Model
 
     public function test_status() : BelongsTo {
         return $this->belongsTo(TestStatus::class, 'test_status_id', 'id');
+    }
+
+    public function user() : BelongsTo {
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
 

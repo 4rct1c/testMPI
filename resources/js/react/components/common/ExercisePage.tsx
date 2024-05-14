@@ -3,7 +3,7 @@ import {useEffect, useState} from "react";
 import axios from "axios";
 import {getApiRoutes} from "../../main";
 import {ExercisePage as StudentPage} from "../student/ExercisePage"
-import {ExercisePage as TeacherPage} from "../teacher/ExercisePage"
+import {EditExercisePage as TeacherPage} from "../teacher/EditExercisePage"
 
 type Props = {
     editable: boolean

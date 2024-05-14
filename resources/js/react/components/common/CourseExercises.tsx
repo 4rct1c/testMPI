@@ -26,9 +26,10 @@ const CourseExercises = (props: Props) => {
 
     const teacherThead = () => {
         return <tr>
-            <th width={'55%'}>Наименование</th>
+            <th width={'50%'}>Наименование</th>
             <th width={'25%'}>Крайний срок</th>
-            <th width={'20%'}><abbr title="загружено / всего студентов (успешно / провалено / ожидает)">Загружено</abbr></th>
+            <th width={'15%'}><abbr title="загружено / всего студентов (успешно / провалено / ожидает)">Загружено</abbr></th>
+            <th width={'10%'}>Действия</th>
         </tr>
     }
 

@@ -32,6 +32,7 @@ Route::post('/api/file/upload/', [StudentController::class, 'uploadFile'])->name
 Route::get('/api/exercise/load/{id?}', [MainController::class, 'loadExercise'])->name('loadExercise');
 Route::get('/api/user/load/', [MainController::class, 'loadUser'])->name('loadUser');
 
+Route::get('/api/exercise/load-students/{id?}', [TeacherController::class, 'loadExerciseStudents'])->name('loadExerciseStudents');
 Route::put('/api/exercise/update/', [TeacherController::class, 'updateExerciseText'])->name('updateExerciseText');
 Route::get('/api/groups/load/', [TeacherController::class, 'loadGroups'])->name('loadGroups');
 

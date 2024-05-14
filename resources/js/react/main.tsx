@@ -10,6 +10,7 @@ import {TeacherPage} from "./Components"
 import {AdminPage} from "./Components"
 import {ApiRoutes} from "./types/types";
 import {ExercisePage} from "./components/common/ExercisePage";
+import {ExerciseTasksPage} from "./components/teacher/ExerciseTasksPage";
 
 declare global {
     const role: string
@@ -67,6 +68,11 @@ const getRoutes = (chosenRole : string | null = null) : {path: string, element: 
                         errorElement: <ErrorPage/>
                     }
                 ]
+            })
+            routes.push({
+                path: prefix + 'exercise/:id/tasks/',
+                element: <ExerciseTasksPage/>,
+                errorElement: <ErrorPage/>,
             })
             break
         case 'admin':

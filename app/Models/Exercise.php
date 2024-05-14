@@ -80,6 +80,18 @@ class Exercise extends Model
     }
 
 
+    public function students() : Collection
+    {
+        $result = new Collection();
+        foreach ($this->tasks as $task){
+            $user = $task->user;
+            $user->full_name = $user->fullName();
+            $result->push($user);
+        }
+        return $result;
+    }
+
+
     public function tasks() : HasMany
     {
         return $this->hasMany(Task::class);

@@ -6,6 +6,7 @@ export type ApiRoutes = {
     load_user: string
     update_exercise_text: string
     load_groups: string
+    load_exercise_students: string
 }
 
 export type Course = {
@@ -19,6 +20,10 @@ export type Course = {
 
 export type CourseWithExercises = Course & {
     exercises: Exercise[]
+}
+
+export type CourseWithExercisesAndTasks = Course & {
+    exercises: ExerciseWithTasksWithTestStatusAndFile[]
 }
 
 export type Exercise = {
@@ -51,6 +56,11 @@ export type ExerciseWithTaskAndFile = Exercise & {
 
 export type ExerciseWithTaskTestStatusAndFile = Exercise & {
     task: TaskWithTestStatusAndFile
+}
+
+
+export type ExerciseWithTasksWithTestStatusAndFile = Exercise & {
+    tasks: TaskWithTestStatusAndFile[]
 }
 
 export type Task = {
@@ -111,6 +121,10 @@ export type User = {
     user_type_id: number
     created_at?: string
     updated_at?: string
+}
+
+export type UserWithFullName = User & {
+    full_name: string
 }
 
 export type Group = {

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Course;
 use App\Models\Exercise;
 use App\Models\Group;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -43,6 +44,9 @@ class TeacherController extends Controller
                     $exercise->succeeded_tasks = count($exercise->succeededTasks());
                     $exercise->awaiting_tasks = count($exercise->awaitingTasks());
                     $exercise->students_count = $students_count;
+                    foreach ($exercise->tasks as $task){
+                        $task->file;
+                    }
                 }
             }
             if ($groupBelongsToCurrentUser){
@@ -50,6 +54,18 @@ class TeacherController extends Controller
             }
         }
         return $result;
+    }
+
+    public function loadExerciseStudents(?int $exerciseId = null): Collection
+    {
+        if ($exerciseId === null){
+            return Collection::make();
+        }
+        $exercise = Exercise::find($exerciseId);
+        if ($exercise === null){
+            return Collection::make();
+        }
+        return $exercise->students();
     }
 
 }

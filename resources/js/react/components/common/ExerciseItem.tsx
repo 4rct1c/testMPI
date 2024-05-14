@@ -3,6 +3,8 @@ import {Exercise as ExerciseType, ExerciseWithTaskCounters, TaskWithTestStatus} 
 import {useNavigate} from "react-router-dom";
 import {dateForHumans} from "../../helpers/dateHepter";
 import {getMarkPercentString} from "../../helpers/taskHepler";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faPencilSquare} from "@fortawesome/free-solid-svg-icons";
 
 type Props = {
     exercise: ExerciseType|ExerciseWithTaskCounters
@@ -16,8 +18,19 @@ function ExerciseItem(props : Props) {
 
     const navigate = useNavigate()
 
-    const handleTaskLink = () => {
+    const openExercisePage = (e?) => {
+        if (e !== undefined){
+            e.stopPropagation()
+        }
         navigate('/portal/exercise/' + props.exercise.id)
+    }
+
+    const openExerciseTasksPage = () => {
+        navigate('/portal/exercise/' + props.exercise.id + '/tasks', {state: {exercise: props.exercise}})
+    }
+
+    const handleTaskLink = () => {
+        props.teacherMode ? openExerciseTasksPage() : openExercisePage()
     }
 
     const taskInfo = (props.task ? props.task : {
@@ -46,6 +59,9 @@ function ExerciseItem(props : Props) {
                 <span className="has-text-success">{props.exercise.succeeded_tasks}</span>/
                 <span className="has-text-danger">{props.exercise.failed_tasks}</span>/
                 <span className="has-text-warning">{props.exercise.awaiting_tasks}</span>)
+            </td>
+            <td>
+                <FontAwesomeIcon icon={faPencilSquare} size='lg' className='my-auto is-clickable is-hoverable is-link' onClick={e => openExercisePage(e)}/>
             </td>
         </>
     }

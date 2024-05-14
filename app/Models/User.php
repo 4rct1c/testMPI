@@ -75,6 +75,11 @@ class User extends Authenticatable
         return $this->type?->code === 'admin';
     }
 
+    public function fullName() : string
+    {
+        return trim(trim($this->last_name . ' ' . $this->name) . ' ' . $this->second_name);
+    }
+
     public function type(): BelongsTo
     {
         return $this->belongsTo(UserType::class, 'user_type_id', 'id');
