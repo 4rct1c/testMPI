@@ -67,7 +67,12 @@ class StudentController extends Controller
                 'size'           => $file->getSize(),
                 'ready_for_test' =>  $request->post('ready_for_test', 'true') === 'true',
             ]);
-            return $taskFile->save();
+            $fileAdded = $taskFile->save();
+            if ($fileAdded && $task->last_uploaded_at !== $currentDate->format('c')){
+                $task->last_uploaded_at = $currentDate->format('c');
+                $task->save();
+            }
+            return $fileAdded;
         } catch (\Exception $e){
             Log::warning("Failed to upload file. Original exception: " . $e->getMessage());
             return false;

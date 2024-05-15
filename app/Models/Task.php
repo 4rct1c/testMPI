@@ -14,8 +14,8 @@ use Illuminate\Database\Query\Builder;
  * @property int        $id
  * @property int        $user_id
  * @property int        $exercise_id
- * @property string     $first_upload_at
- * @property string     $last_upload_at
+ * @property string     $first_uploaded_at
+ * @property string     $last_uploaded_at
  * @property double     $mark
  * @property string     $comment
  * @property string     $teacher_comment
@@ -35,8 +35,8 @@ class Task extends Model
     public $fillable = [
         'user_id',
         'exercise_id',
-        'first_upload_at',
-        'last_upload_at',
+        'first_uploaded_at',
+        'last_uploaded_at',
         'mark',
         'file',
         'comment',
