@@ -48,35 +48,38 @@ class TestHelper
         }
     }
 
-    //Todo: write real handler
-    public static function executeResponseIsError() : bool
-    {
-        return false;
-    }
-
     public function getCompileCommand() : string
     {
         return "mpiCC " . $this->file->generatedNameWithExtension() . " -o " . $this->file->generated_name;
     }
 
-    protected function handleExecuteResponse(Process $process, Test $test) : ?bool
+    protected function handleExecuteResponse(Process $process, ?Test $test = null) : bool
     {
         if (!$process->isSuccessful()){
-            Log::warning('Helper: failed to execute file with id ' . $this->file->id .
-                "\nOutput: " . $process->getOutput() .
-                "\nError output: " . $process->getErrorOutput() .
-                "\nStatus: " . $process->getStatus()
+            Log::debug('Helper: execution error in file ' . $this->file->originalNameWithExtension() .
+                ' (id ' . $this->file->id . ')' .
+                "\nStatus: " . $process->getStatus() .
+                "\nError output: " . $process->getErrorOutput()
             );
-            return null;
-        }
-        Log::debug("Success! Returned: " . $process->getOutput());
-        if (static::executeResponseIsError()){
             $this->task->test_status_id = TestStatus::runtimeError()->id;
-            $this->task->test_message = $process->getOutput();
+            $this->task->test_message = $process->getErrorOutput();
             $this->task->save();
             return false;
         }
-        return $this->checkTestResult($test, $process->getOutput());
+        Log::debug("Helper: file " . $this->file->originalNameWithExtension() . " executed. Returned: " . $process->getOutput());
+
+        if ($this->file->ready_for_test){
+            $testPassed = $this->checkTestResult($test, $process->getOutput());
+            $this->task->test_status_id = $testPassed ? TestStatus::successStatus()->id : TestStatus::wrongAnswer()->id;
+            $this->task->test_message = $process->getOutput();
+            $this->task->save();
+            return $testPassed;
+        }
+
+        $this->task->test_message = $process->getOutput();
+        $this->task->save();
+
+        return false;
     }
 
     protected function checkTestResult(Test $test, string $output) : bool {
