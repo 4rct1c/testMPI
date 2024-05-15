@@ -65,6 +65,7 @@ class StudentController extends Controller
                 'generated_name' => $generatedName,
                 'extension'      => $extension,
                 'size'           => $file->getSize(),
+                'ready_for_test' =>  $request->post('ready_for_test', 'true') === 'true',
             ]);
             return $taskFile->save();
         } catch (\Exception $e){

@@ -18,6 +18,8 @@ const UploadFileField = (props: Props) => {
 
     const [file, setFile] = useState(null)
 
+    const [readyForTest, setReadyForTest] = useState(false)
+
     const [message, setMessage] = useState(messageInitialState)
 
     const uploadFileAxios = (data) => {
@@ -42,6 +44,7 @@ const UploadFileField = (props: Props) => {
         formData.append('answer', file)
         formData.append('task_id', props.taskId !== null ? props.taskId.toString() : '')
         formData.append('exercise_id', props.exerciseId.toString())
+        formData.append('ready_for_test', readyForTest)
         uploadFileAxios(formData).then( response => {
             setFile(null)
             if (response.data){
@@ -64,8 +67,12 @@ const UploadFileField = (props: Props) => {
 
     return <>
         <form>
-            <div className="mt-3">
+            <div className="mt-3 is-flex">
                 <input type='file' name="file" onChange={event => setFile(event.target.files[0])}/>
+                <label className="is-flex is-align-content-center my-auto is-hoverable is-clickable">
+                    <input type='checkbox' name="ready_for_test" className="mr-1" checked={readyForTest} onClick={() => setReadyForTest(!readyForTest)}/>
+                    Готов для тестирования
+                </label>
             </div>
         </form>
         <button className="button is-link my-2" onClick={uploadFileHandler}>Загрузить ответ</button>
