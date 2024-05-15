@@ -26,7 +26,7 @@ class TestHelper
 
     public function createSshCommand() : Ssh {
         return Ssh::create($this->cluster->username, $this->cluster->host, $this->cluster->port)
-            ->usePrivateKey('/var/www/.ssh/' .$this->cluster->key_name);
+            ->usePrivateKey($this->cluster->getKeyPath());
     }
 
     public function handleCompilationError(string $errorMessage) : void

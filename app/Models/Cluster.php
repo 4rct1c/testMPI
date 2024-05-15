@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helpers\SshHelper;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -35,6 +36,11 @@ class Cluster extends Model
         'frequency_minutes',
         'batch_size',
     ];
+
+    public function getKeyPath() : string
+    {
+        return SshHelper::KEYS_DIRECTORY . $this->key_name;
+    }
 
 
 }
