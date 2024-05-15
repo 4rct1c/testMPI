@@ -68,6 +68,7 @@ export type Task = {
     comment: string
     teacher_comment: string
     test_status_id: number
+    test_message: string
     created_at?: string
     updated_at?: string
 }

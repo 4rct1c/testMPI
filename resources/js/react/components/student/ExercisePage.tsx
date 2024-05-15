@@ -2,6 +2,7 @@ import {useEffect, useState} from "react";
 import {TaskFieldsBlock} from "./TaskFieldsBlock";
 import {ExerciseBlock} from "../common/ExerciseBlock";
 import {ExerciseWithTaskTestStatusAndFile} from "../../types/types";
+import {TaskTestMessageBlock} from "./TaskTestMessageBlock";
 
 type Props = {
     exercise: ExerciseWithTaskTestStatusAndFile
@@ -28,6 +29,7 @@ const ExercisePage = (props: Props) => {
         <div className="column is-one-third-desktop">
             <TaskFieldsBlock task={taskWasUploaded ? props.exercise.task : null}
                              exercise={props.exercise} updateHandler={props.loadExercise}/>
+            {taskWasUploaded ? <TaskTestMessageBlock task={props.exercise.task}/> : <></>}
         </div>
     </div>
 }
