@@ -62,7 +62,11 @@ class TestHelper
     protected function handleExecuteResponse(Process $process, Test $test) : ?bool
     {
         if (!$process->isSuccessful()){
-            Log::warning('Failed to execute file with id ' . $this->file->id);
+            Log::warning('Helper: failed to execute file with id ' . $this->file->id .
+                "\nOutput: " . $process->getOutput() .
+                "\nError output: " . $process->getErrorOutput() .
+                "\nStatus: " . $process->getStatus()
+            );
             return null;
         }
         Log::debug("Success! Returned: " . $process->getOutput());

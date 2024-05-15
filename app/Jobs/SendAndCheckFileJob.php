@@ -37,17 +37,22 @@ class SendAndCheckFileJob implements ShouldQueue
     public function handle(): void
     {
         if ($this->file === null){
+            Log::warning('SendJob: file is null!');
             return;
         }
-        $filename = $this->file->generated_name . "." . $this->file->extension;
+        Log::debug("SendJob: handling file " . $this->file->originalNameWithExtension() . " (id = " . $this->file->id . ")");
 
-        $filePath = Storage::path(TaskFile::DIRECTORY . $filename);
+        $filePath = Storage::path(TaskFile::DIRECTORY . $this->file->generatedNameWithExtension());
 
 
 
         $uploadProcess = $this->helper->createSshCommand()->upload($filePath, $this->cluster->files_directory);
         if (!$uploadProcess->isSuccessful()){
-            Log::warning('Failed to upload file with id ' . $this->file->id);
+            Log::warning('SendJob: failed to upload file with id ' . $this->file->id .
+                "\nOutput: " . $uploadProcess->getOutput() .
+                "\nError output: " . $uploadProcess->getErrorOutput() .
+                "\nStatus: " . $uploadProcess->getStatus()
+            );
             return;
         }
 
@@ -57,11 +62,15 @@ class SendAndCheckFileJob implements ShouldQueue
         ]);
 
         if (!$compileProcess->isSuccessful()){
-            Log::warning('Failed to compile file with id ' . $this->file->id);
+            Log::warning('SendJob: failed to compile file with id ' . $this->file->id .
+                "\nOutput: " . $compileProcess->getOutput() .
+                "\nError output: " . $compileProcess->getErrorOutput() .
+                "\nStatus: " . $compileProcess->getStatus()
+            );
             return;
         }
 
-        Log::debug("Compiled! Received: " . $compileProcess->getOutput());
+        Log::debug("SendJob: compiled! Received: " . $compileProcess->getOutput());
 
         if (strlen($compileProcess->getOutput())){
             $this->helper->handleCompilationError($compileProcess->getOutput());
