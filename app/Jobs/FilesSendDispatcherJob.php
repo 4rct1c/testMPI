@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 class FilesSendDispatcherJob implements ShouldQueue
 {
@@ -33,6 +34,7 @@ class FilesSendDispatcherJob implements ShouldQueue
     public function handle(): void
     {
         if ($this->cluster === null) {
+            Log::warning('Cluster not found!');
             return;
         }
         $this->dispatchSendJobs();
@@ -55,7 +57,7 @@ class FilesSendDispatcherJob implements ShouldQueue
                 if ($dispatchedCounter >= $this->cluster->batch_size){
                     return $dispatchedCounter;
                 }
-                SendAndCheckFileJob::dispatch($task);
+                SendAndCheckFileJob::dispatch($this->cluster, $task);
                 $dispatchedCounter++;
             }
         }

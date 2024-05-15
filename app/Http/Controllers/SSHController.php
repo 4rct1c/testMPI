@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\FilesSendDispatcherJob;
 use App\Models\Cluster;
 use JetBrains\PhpStorm\NoReturn;
 use App\Helpers\Ssh;
@@ -10,7 +11,8 @@ class SSHController extends Controller
 {
 
     public function test(){
-        self::sendCommandToCluster();
+//        self::sendCommandToCluster();
+        FilesSendDispatcherJob::dispatch(1);
     }
 
     #[NoReturn] public static function sendCommandToCluster() : void
