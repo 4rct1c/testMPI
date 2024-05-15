@@ -47,8 +47,7 @@ class TaskFile extends Model
 
 
     public function deleteWithFile() : bool {
-        $directory = 'answers/';
-        $path = $directory . $this->generatedNameWithExtension();
+        $path = static::DIRECTORY . $this->generatedNameWithExtension();
         if (Storage::exists($path)){
             if (Storage::delete($path)){
                 return $this->delete();
