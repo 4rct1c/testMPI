@@ -25,7 +25,7 @@ use Illuminate\Database\Eloquent\Collection;
 class Cluster extends Model
 {
 
-    public $table = 'courses';
+    public $table = 'clusters';
 
     public $fillable = [
         'host',
