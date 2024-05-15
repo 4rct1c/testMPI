@@ -35,10 +35,20 @@ class TaskFile extends Model
         'size',
     ];
 
+    public function generatedNameWithExtension() : string
+    {
+        return $this->generated_name . "." . $this->extension;
+    }
+
+    public function originalNameWithExtension() : string
+    {
+        return $this->original_name . "." . $this->extension;
+    }
+
 
     public function deleteWithFile() : bool {
         $directory = 'answers/';
-        $path = $directory . $this->generated_name . '.' . $this->extension;
+        $path = $directory . $this->generatedNameWithExtension();
         if (Storage::exists($path)){
             if (Storage::delete($path)){
                 return $this->delete();

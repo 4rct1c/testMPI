@@ -42,8 +42,7 @@ class TestHelper
         foreach ($this->task->exercise->tests as $test){
             $executeProcess = $this->createSshCommand()->execute([
                 'cd ' . $this->cluster->files_directory,
-                $this->file->generated_name . "." . $this->file->extension,
-                $test->input
+                $this->file->generated_name . " " . $test->input
             ]);
             $this->handleExecuteResponse($executeProcess, $test);
         }
@@ -55,18 +54,18 @@ class TestHelper
         return false;
     }
 
-    //Todo: write real command
-    public static function getCompileCommand(string $filename) : string
+    public function getCompileCommand() : string
     {
-        return $filename;
+        return "mpiCC " . $this->file->generatedNameWithExtension() . " -o " . $this->file->generated_name;
     }
 
     protected function handleExecuteResponse(Process $process, Test $test) : ?bool
     {
         if (!$process->isSuccessful()){
-            Log::error('Failed to execute file with id ' . $this->file->id);
+            Log::warning('Failed to execute file with id ' . $this->file->id);
             return null;
         }
+        Log::debug("Success! Returned: " . $process->getOutput());
         if (static::executeResponseIsError()){
             $this->task->test_status_id = TestStatus::runtimeError()->id;
             $this->task->test_message = $process->getOutput();

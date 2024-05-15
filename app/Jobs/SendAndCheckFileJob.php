@@ -47,19 +47,21 @@ class SendAndCheckFileJob implements ShouldQueue
 
         $uploadProcess = $this->helper->createSshCommand()->upload($filePath, $this->cluster->files_directory);
         if (!$uploadProcess->isSuccessful()){
-            Log::error('Failed to upload file with id ' . $this->file->id);
+            Log::warning('Failed to upload file with id ' . $this->file->id);
             return;
         }
 
         $compileProcess = $this->helper->createSshCommand()->execute([
             'cd ' . $this->cluster->files_directory,
-            TestHelper::getCompileCommand($filename)
+            $this->helper->getCompileCommand()
         ]);
 
         if (!$compileProcess->isSuccessful()){
-            Log::error('Failed to compile file with id ' . $this->file->id);
+            Log::warning('Failed to compile file with id ' . $this->file->id);
             return;
         }
+
+        Log::debug("Compiled! Received: " . $compileProcess->getOutput());
 
         if (strlen($compileProcess->getOutput())){
             $this->helper->handleCompilationError($compileProcess->getOutput());
