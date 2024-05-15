@@ -11,7 +11,6 @@ class MainController extends Controller
 {
     public function react()
     {
-        SSHController::sendCommandToCluster();
         /** @var User $user */
         $user = Auth::user();
         $userTypeCode = $user->type?->code ?? 'guest';
