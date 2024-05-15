@@ -10,14 +10,15 @@ use Illuminate\Support\Facades\Storage;
  * @mixin \Illuminate\Database\Eloquent\Builder
  * @mixin Builder
  *
- * @property int    $id
- * @property int    $task_id
- * @property string $original_name
- * @property string $generated_name
- * @property string $extension
- * @property int    $size
- * @property string $created_at
- * @property string $updated_at
+ * @property int        $id
+ * @property int        $task_id
+ * @property string     $original_name
+ * @property string     $generated_name
+ * @property string     $extension
+ * @property int        $size
+ * @property boolean    $ready_for_test
+ * @property string     $created_at
+ * @property string     $updated_at
  *
  */
 class TaskFile extends Model
@@ -33,6 +34,7 @@ class TaskFile extends Model
         'generated_name',
         'extension',
         'size',
+        'ready_for_test',
     ];
 
     public function generatedNameWithExtension() : string
