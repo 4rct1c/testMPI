@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\MainController;
+use App\Http\Controllers\SSHController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TeacherController;
 use Illuminate\Support\Facades\Auth;
@@ -24,7 +25,9 @@ Route::get('/', function () {return redirect(\route('react'));})->name('default'
 Route::get('/portal/{path?}', [MainController::class, 'react'])
     ->where('path', '.*')->name('react');
 
-//Route::get('/ssh/test/', [SSHController::class, 'test'])->name('testSSH');
+Route::get('/ssh/test/', [SSHController::class, 'test'])->name('testSSH');
+
+
 Route::get('/api/courses/load/', [StudentController::class, 'loadCourses'])->name('loadCourses');
 Route::get('/api/tasks/load/', [StudentController::class, 'loadTasks'])->name('loadTasks');
 Route::post('/api/file/upload/', [StudentController::class, 'uploadFile'])->name('uploadFile');
