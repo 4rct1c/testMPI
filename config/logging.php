@@ -1,5 +1,6 @@
 <?php
 
+use App\Monolog\DataBaseLogHandler;
 use Monolog\Handler\NullHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\SyslogUdpHandler;
@@ -18,7 +19,7 @@ return [
     |
     */
 
-    'default' => env('LOG_CHANNEL', 'stack'),
+    'default' => env('LOG_CHANNEL', 'database'),
 
     /*
     |--------------------------------------------------------------------------
@@ -52,6 +53,10 @@ return [
     */
 
     'channels' => [
+        'database' => [
+            'driver' => 'monolog',
+            'handler' => DatabaseLogHandler::class,
+        ],
         'stack' => [
             'driver' => 'stack',
             'channels' => ['single'],
