@@ -6,7 +6,6 @@ type Props = {
 
 const TaskTestMessageBlock = (props: Props) => {
 
-    console.log(props.task.test_message.split('\n'))
 
     return <div className="box theme-light">
         <h5>Ответ</h5>
