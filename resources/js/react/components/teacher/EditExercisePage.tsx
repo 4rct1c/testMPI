@@ -18,6 +18,7 @@ const EditExercisePage = (props: Props) => {
     const updateExerciseAxios = () => {
         return axios.put(getApiRoutes().update_exercise,{
             id: exercise.id,
+            course_id: exercise.course_id,
             title: exercise.title,
             max_score: exercise.max_score,
             deadline: exercise.deadline,
@@ -41,7 +42,7 @@ const EditExercisePage = (props: Props) => {
 
 
     const changeText = (newText) => {
-        let handledExercise = {...props.exercise}
+        let handledExercise = {...exercise}
         handledExercise.text = newText
         setExercise(handledExercise)
     }

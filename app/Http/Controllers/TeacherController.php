@@ -15,7 +15,11 @@ class TeacherController extends Controller
     public function updateExercise(Request $request) : bool {
         $exercise = Exercise::find($request->post('id'));
         if ($exercise === null) {
-            return false;
+            if ($request->post('course_id') === null){
+                return false;
+            }
+            $exercise = new Exercise();
+            $exercise->course_id = $request->post('course_id');
         }
         $exercise->title = $request->post('title');
         $exercise->max_score = $request->post('max_score');

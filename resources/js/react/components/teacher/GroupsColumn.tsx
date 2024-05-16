@@ -20,14 +20,11 @@ const GroupsColumn = () => {
     }, [])
 
     return <div className="box is-black theme-light">
-
-        <div className="">
-            <h3 className="is-size-3 mb-3">
-                Группы
-            </h3>
-            <div className="m-2">
-                {groups.map(group => <GroupBlock group={group}/>)}
-            </div>
+        <h3 className="is-size-3 mb-3">
+            Группы
+        </h3>
+        <div className="m-2">
+            {groups.map(group => <GroupBlock group={group}/>)}
         </div>
     </div>
 }

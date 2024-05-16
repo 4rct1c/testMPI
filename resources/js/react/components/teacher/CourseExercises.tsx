@@ -3,6 +3,7 @@ import {ExerciseItem} from "./ExerciseItem";
 import {CourseWithExercisesTeacher} from "../../types/types";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCaretDown, faCaretUp} from "@fortawesome/free-solid-svg-icons";
+import {useNavigate} from "react-router-dom";
 
 type Props = {
     course: CourseWithExercisesTeacher
@@ -11,8 +12,16 @@ type Props = {
 
 const CourseExercises = (props: Props) => {
 
+
+    const navigate = useNavigate()
+
+
     const [showExercises, setShowExercises] = useState(false)
 
+
+    const addButtonHandler = () => {
+        navigate('/portal/exercise', {state: {course_id: props.course.id}})
+    }
 
     const viewExercisesList = () => {
         if (!showExercises) return <></>
@@ -38,12 +47,13 @@ const CourseExercises = (props: Props) => {
 
     return (
         <div>
-            <div className="is-flex my-3 is-hoverable is-clickable" onClick={() => setShowExercises(!showExercises)}>
-                <h4 className="is-size-4 my-0">
+            <div className="is-flex my-3 is-hoverable is-clickable is-fullwidth" onClick={() => setShowExercises(!showExercises)}>
+                <h4 className="is-size-4 my-0 mr-auto">
                     {props.course.name}
                 </h4>
-                <FontAwesomeIcon icon={showExercises ? faCaretUp : faCaretDown} className="ml-auto is-align-self-center"
+                <FontAwesomeIcon icon={showExercises ? faCaretUp : faCaretDown} className="ml-auto mr-0 is-align-self-center"
                                  size='xl'/>
+                <button className="ml-2 my-auto mr-0 button is-link" onClick={addButtonHandler}>Добавить задание</button>
             </div>
             {viewExercisesList()}
         </div>
