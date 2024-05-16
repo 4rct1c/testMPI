@@ -52,7 +52,11 @@ const ExerciseTasksPage = () => {
     }
 
     return (
-         <TasksTableBlock exercise={exercise} users={users}/>
+        <div className="columns">
+            <div className="column mx-4">
+                <TasksTableBlock exercise={exercise} users={users}/>
+            </div>
+        </div>
     )
 }
 

@@ -85,7 +85,7 @@ const TestsPage = () => {
     }, [])
 
 
-    return <div className="columns">
+    return <div className="columns mx-2">
         <div className="column is-two-thirds">
             <div className="box theme-light">
                 <table className="table">

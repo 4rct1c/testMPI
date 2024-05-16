@@ -1,9 +1,13 @@
 import React from 'react'
-import {GroupsColumn} from "./GroupsColumn";
+import {GroupsBlock} from "./GroupsBlock";
 
 function TeacherPage() {
     return (
-        <GroupsColumn/>
+        <div className="columns">
+            <div className="column mx-4">
+                <GroupsBlock/>
+            </div>
+        </div>
     );
 }
 

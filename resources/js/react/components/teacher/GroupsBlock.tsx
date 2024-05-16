@@ -4,7 +4,7 @@ import axios from "axios";
 import {getApiRoutes} from "../../main";
 
 
-const GroupsColumn = () => {
+const GroupsBlock = () => {
 
     const [groups, setGroups] = useState([])
 
@@ -29,4 +29,4 @@ const GroupsColumn = () => {
     </div>
 }
 
-export {GroupsColumn}
+export {GroupsBlock}
