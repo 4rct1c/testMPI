@@ -23,9 +23,9 @@ const TaskItem = (props: Props) => {
     return (
         <tr>
             <td>{props.user !== null ? props.user.full_name : '—'}</td>
+            <td>{dateForHumans(props.task.last_uploaded_at, true)}</td>
             <td>{props.task.test_status.label}</td>
             <td>{props.task.mark}</td>
-            <td>{dateForHumans(props.task.last_uploaded_at, true)}</td>
             <td>{viewFile()}</td>
             <td>{props.task.comment}</td>
             <td>{props.task.teacher_comment}</td>
