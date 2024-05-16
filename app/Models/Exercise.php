@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Log;
  * @property string             $deadline
  * @property double             $deadline_multiplier
  * @property string             $text
+ * @property boolean            $is_hidden
  * @property Collection<Task>   $tasks
  * @property Collection<Test>   $tests
  *
@@ -36,6 +37,7 @@ class Exercise extends Model
         'deadline',
         'deadline_multiplier',
         'text',
+        'is_hidden',
     ];
 
 

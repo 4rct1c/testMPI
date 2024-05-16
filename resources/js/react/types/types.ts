@@ -34,6 +34,7 @@ export type Exercise = {
     deadline: string
     deadline_multiplier: number
     text: string
+    is_hidden: boolean
     created_at?: string
     updated_at?: string
 }
