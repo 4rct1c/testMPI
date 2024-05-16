@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Course;
 use App\Models\Exercise;
 use App\Models\Group;
+use App\Models\Test;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -64,6 +65,34 @@ class TeacherController extends Controller
             return Collection::make();
         }
         return $exercise->students();
+    }
+
+    public function addTest(Request $request) : bool
+    {
+        $test = new Test();
+        $test->exercise_id = $request->post('exercise_id');
+        $test = static::fillTest($test, $request);
+        return $test->save();
+    }
+
+    public function updateTest(Request $request) : bool
+    {
+        $test = Test::find($request->post('id'));
+        if ($test === null){
+            return false;
+        }
+        $test = static::fillTest($test, $request);
+        return $test->save();
+    }
+
+    private static function fillTest(Test $test, Request $request) : Test{
+        $test->input = $request->post('input');
+        $test->desired_result = $request->post('desired_result');
+        $test->max_divergence = $request->post('max_divergence');
+        $test->time_limit = $request->post('time_limit');
+        $test->overdue_multiplier = $request->post('overdue_multiplier');
+        $test->error_message = $request->post('error_message');
+        return $test;
     }
 
     private static function addAttributesToExercise(Exercise $exercise, int $studentsCount) : Exercise

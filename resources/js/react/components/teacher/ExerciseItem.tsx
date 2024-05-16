@@ -3,7 +3,7 @@ import {ExerciseWithTaskCounters} from "../../types/types";
 import {useNavigate} from "react-router-dom";
 import {dateForHumans} from "../../helpers/dateHepter";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faPencilSquare} from "@fortawesome/free-solid-svg-icons";
+import {faFileCircleCheck, faPencilSquare} from "@fortawesome/free-solid-svg-icons";
 
 type Props = {
     exercise: ExerciseWithTaskCounters
@@ -15,11 +15,14 @@ function ExerciseItem(props : Props) {
 
     const navigate = useNavigate()
 
-    const openExercisePage = (e?) => {
-        if (e !== undefined){
-            e.stopPropagation()
-        }
+    const openExercisePage = (e) => {
+        e.stopPropagation()
         navigate('/portal/exercise/' + props.exercise.id)
+    }
+
+    const openTestsPage = (e) => {
+        e.stopPropagation()
+        navigate('/portal/exercise/' + props.exercise.id + '/tests', {state: {exercise: props.exercise}})
     }
 
     const openExerciseTasksPage = () => {
@@ -38,6 +41,7 @@ function ExerciseItem(props : Props) {
             </td>
             <td>
                 <FontAwesomeIcon icon={faPencilSquare} size='lg' className='my-auto is-clickable is-hoverable is-link' onClick={e => openExercisePage(e)}/>
+                <FontAwesomeIcon icon={faFileCircleCheck} className='ml-2 my-auto is-clickable is-hoverable is-link' onClick={e => openTestsPage(e)}/>
             </td>
         </tr>
     );

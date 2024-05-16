@@ -7,6 +7,8 @@ export type ApiRoutes = {
     update_exercise: string
     load_groups: string
     load_exercise_students: string
+    update_test: string
+    add_test: string
 }
 
 export type Course = {
@@ -132,4 +134,17 @@ export type Group = {
 
 export type GroupWithCourses = Group & {
     courses: CourseWithExercisesTeacher[]
+}
+
+export type Test = {
+    id: number
+    exercise_id: number
+    input: string
+    desired_result: string
+    max_divergence: number|null
+    time_limit: number
+    overdue_multiplier: number
+    error_message: string
+    created_at?: string
+    updated_at?: string
 }

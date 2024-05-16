@@ -38,5 +38,7 @@ Route::get('/api/user/load/', [MainController::class, 'loadUser'])->name('loadUs
 Route::get('/api/exercise/load-students/{id?}', [TeacherController::class, 'loadExerciseStudents'])->name('loadExerciseStudents');
 Route::put('/api/exercise/update/', [TeacherController::class, 'updateExercise'])->name('updateExercise');
 Route::get('/api/groups/load/', [TeacherController::class, 'loadGroups'])->name('loadGroups');
+Route::post('/api/test/add/', [TeacherController::class, 'addTest'])->name('addTest');
+Route::put('/api/test/update/', [TeacherController::class, 'updateTest'])->name('updateTest');
 
 //Route::get('/home', [HomeController::class, 'index'])->name('home');

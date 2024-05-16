@@ -21,6 +21,7 @@ class MainController extends Controller
     }
 
     public function loadExercise(int $id) : ?Exercise{
+        /** @var Exercise $exercise */
         $exercise = Exercise::with('attachments')->where('id', $id)->get()->first() ?? null;
         if ($exercise === null) return null;
         /** @var User $user */
@@ -31,6 +32,7 @@ class MainController extends Controller
             return $exercise;
         }
         $exercise->tasks = $exercise->tasks()->with('test_status')->with('file')->get();
+        $exercise->tests = $exercise->tests()->get();
         return $exercise;
     }
 
