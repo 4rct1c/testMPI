@@ -29,30 +29,18 @@ class TeacherController extends Controller
             if (!count($group->courses)){
                 continue;
             }
-            $students_count = count($group->students);
-            $groupBelongsToCurrentUser = true;
+            $studentsCount = count($group->students);
             /** @var Course $course */
             foreach ($group->courses as $course){
                 if ($course->teacher_id !== Auth::user()->id){
-                    $groupBelongsToCurrentUser = false;
-                    break;
+                    continue;
                 }
                 /** @var Exercise $exercise */
-                foreach ($course->exercises as $exercise){
-                    $exercise->loaded_tasks = count($exercise->tasks);
-                    $exercise->failed_tasks = count($exercise->failedTasks());
-                    $exercise->succeeded_tasks = count($exercise->succeededTasks());
-                    $exercise->awaiting_tasks = count($exercise->awaitingTasks());
-                    $exercise->students_count = $students_count;
-                    foreach ($exercise->tasks as $task){
-                        $task->file;
-                        $task->test_status;
-                    }
+                foreach ($course->exercises as $key => $exercise){
+                    $course->exercises->put($key, static::addAttributesToExercise($exercise, $studentsCount));
                 }
             }
-            if ($groupBelongsToCurrentUser){
-                $result[] = $group;
-            }
+            $result[] = $group;
         }
         return $result;
     }
@@ -67,6 +55,20 @@ class TeacherController extends Controller
             return Collection::make();
         }
         return $exercise->students();
+    }
+
+    private static function addAttributesToExercise(Exercise $exercise, int $studentsCount) : Exercise
+    {
+        $exercise->loaded_tasks = count($exercise->tasks);
+        $exercise->failed_tasks = count($exercise->failedTasks());
+        $exercise->succeeded_tasks = count($exercise->succeededTasks());
+        $exercise->awaiting_tasks = count($exercise->awaitingTasks());
+        $exercise->students_count = $studentsCount;
+        foreach ($exercise->tasks as $task){
+            $task->file;
+            $task->test_status;
+        }
+        return $exercise;
     }
 
 }
