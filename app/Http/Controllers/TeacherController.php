@@ -12,12 +12,17 @@ use Illuminate\Support\Facades\Auth;
 class TeacherController extends Controller
 {
 
-    public function updateExerciseText(Request $request) : bool {
+    public function updateExercise(Request $request) : bool {
         $exercise = Exercise::find($request->post('id'));
         if ($exercise === null) {
             return false;
         }
+        $exercise->title = $request->post('title');
+        $exercise->max_score = $request->post('max_score');
+        $exercise->deadline = $request->post('deadline');
+        $exercise->deadline_multiplier = $request->post('deadline_multiplier');
         $exercise->text = $request->post('text');
+        $exercise->is_hidden = $request->post('is_hidden');
         return $exercise->save();
     }
 

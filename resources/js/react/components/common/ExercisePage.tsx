@@ -15,7 +15,7 @@ const ExercisePage = (props: Props) => {
 
     const exerciseId = params.id
 
-    const [exercise, setExercise] = useState()
+    const [exercise, setExercise] = useState(undefined)
 
 
     const loadExerciseAxios = () => {

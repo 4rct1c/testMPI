@@ -1,8 +1,8 @@
 import {useEffect, useState} from "react";
 import {TaskFieldsBlock} from "./TaskFieldsBlock";
-import {ExerciseBlock} from "../common/ExerciseBlock";
 import {ExerciseWithTaskTestStatusAndFile} from "../../types/types";
 import {TaskTestMessageBlock} from "./TaskTestMessageBlock";
+import Editor from "../Editor";
 
 type Props = {
     exercise: ExerciseWithTaskTestStatusAndFile
@@ -24,7 +24,10 @@ const ExercisePage = (props: Props) => {
 
     return <div className="columns mx-4">
         <div className="column is-two-thirds-desktop">
-            <ExerciseBlock exercise={props.exercise} editable={false}/>
+            <div className="box theme-light">
+                <h3 className="is-size-3 m-2">{props.exercise.title}</h3>
+                <Editor content={props.exercise.text} changeValue={() => {}} editable={false}/>
+            </div>
         </div>
         <div className="column is-one-third-desktop">
             <TaskFieldsBlock task={taskWasUploaded ? props.exercise.task : null}

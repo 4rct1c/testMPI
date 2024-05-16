@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 
@@ -36,6 +36,10 @@ export default function Editor( props: EditorDemoProps ): JSX.Element {
             } )
         } ) );
     };
+
+    useEffect(() => {
+        props.changeValue(state.documents[state.documentID])
+    }, [state])
 
     const toggleReadOnly = () => {
         const editor = state.editor!;
@@ -124,23 +128,20 @@ export default function Editor( props: EditorDemoProps ): JSX.Element {
                 onReady={ editor => {
                     window.editor = editor;
 
-                    console.log( 'event: onReady' );
-                    console.log( 'Editor is ready to use! You can use "editor" variable to play with it.' );
+                    // console.log( 'event: onReady' );
+                    // console.log( 'Editor is ready to use! You can use "editor" variable to play with it.' );
 
                     setState( prevState => ( { ...prevState, editor } ) );
                 } }
 
                 onChange={ ( event, editor ) => {
                     updateData();
-                    props.changeValue(state.documents[state.documentID])
                 } }
 
                 onBlur={ ( event, editor ) => {
-                    console.log( 'event: onBlur', { event, editor } );
                 } }
 
                 onFocus={ ( event, editor ) => {
-                    console.log( 'event: onFocus', { event, editor } );
                 } }
             />
         </>
