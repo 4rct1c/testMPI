@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Exercise;
 use App\Models\Task;
 use App\Models\TaskFile;
+use App\Models\TestStatus;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -46,7 +47,7 @@ class StudentController extends Controller
                 'user_id'           => Auth::user()->id,
                 'exercise_id'       => $exercise->id,
                 'first_uploaded_at' => $currentDate->format('c'),
-                'last_uploaded_at'  => $currentDate->format('c'),
+                'last_uploaded_at'  => $currentDate->format('c')
             ]);
             $task->save();
         }
@@ -68,8 +69,11 @@ class StudentController extends Controller
                 'ready_for_test' =>  $request->post('ready_for_test', 'true') === 'true',
             ]);
             $fileAdded = $taskFile->save();
-            if ($fileAdded && $task->last_uploaded_at !== $currentDate->format('c')){
-                $task->last_uploaded_at = $currentDate->format('c');
+            if ($fileAdded){
+                $task->test_status_id = TestStatus::awaitingTest();
+                if ($task->last_uploaded_at !== $currentDate->format('c')){
+                    $task->last_uploaded_at = $currentDate->format('c');
+                }
                 $task->save();
             }
             return $fileAdded;

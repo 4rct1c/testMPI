@@ -6,6 +6,9 @@ type Props = {
 
 const TaskTestMessageBlock = (props: Props) => {
 
+    if (props.task.test_message === null || props.task.test_message === undefined){
+        return <></>
+    }
 
     return <div className="box theme-light">
         <h5>Ответ</h5>

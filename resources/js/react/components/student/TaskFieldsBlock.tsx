@@ -64,7 +64,7 @@ const TaskFieldsBlock = (props: Props) => {
     return <div className="box theme-light">
         <div className="m-2">
             <BulmaLevel label="Дата сдачи" value={taskNotNull ? dateForHumans(props.task.last_uploaded_at) : null}/>
-            <BulmaLevel label="Статус проверки" value={taskNotNull ? props.task.test_status.label : null}/>
+            <BulmaLevel label="Статус проверки" value={(taskNotNull && props.task.test_status !== null) ? props.task.test_status.label : null}/>
             <BulmaLevel label="Оценка" value={taskNotNull ? getMarkInfo(props.task, props.exercise) : null}/>
             {viewFileField()}
             <BulmaField label="Комментарий преподавателя" value={taskNotNull ? props.task.teacher_comment : null}/>
