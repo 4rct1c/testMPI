@@ -70,7 +70,7 @@ class StudentController extends Controller
             ]);
             $fileAdded = $taskFile->save();
             if ($fileAdded){
-                $task->test_status_id = TestStatus::awaitingTest();
+                $task->test_status_id = TestStatus::awaitingTest()->id;
                 if ($task->last_uploaded_at !== $currentDate->format('c')){
                     $task->last_uploaded_at = $currentDate->format('c');
                 }
