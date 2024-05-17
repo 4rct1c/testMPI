@@ -40,12 +40,21 @@ class TestHelper
     {
         /** @var Test $test */
         foreach ($this->task->exercise->tests as $test){
-            $executeProcess = $this->createSshCommand()->execute([
-                'cd ' . $this->cluster->files_directory,
-                $this->file->generated_name . " " . $test->input
-            ]);
-            $this->handleExecuteResponse($executeProcess, $test);
+            $this->executeFile($test);
         }
+    }
+
+    public function executeFile(?Test $test = null) : void
+    {
+        $executeCommand = $this->file->generated_name;
+        if ($test !== null){
+            $executeCommand .= " " . $test->input;
+        }
+        $executeProcess = $this->createSshCommand()->execute([
+            'cd ' . $this->cluster->files_directory,
+            $executeCommand
+        ]);
+        $this->handleExecuteResponse($executeProcess, $test);
     }
 
     public function getCompileCommand() : string
@@ -76,6 +85,7 @@ class TestHelper
             return $testPassed;
         }
 
+        $this->task->test_status_id = TestStatus::awaitingConfirmation()->id;
         $this->task->test_message = $process->getOutput();
         $this->task->save();
 

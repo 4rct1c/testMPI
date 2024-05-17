@@ -76,6 +76,10 @@ class SendAndCheckFileJob implements ShouldQueue
         if ($this->file->ready_for_test){
             $this->helper->runTests();
         }
+        else
+        {
+            $this->helper->executeFile();
+        }
 
     }
 
