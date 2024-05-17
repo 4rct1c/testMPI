@@ -20,6 +20,7 @@ use Illuminate\Database\Eloquent\Collection;
  * @property string $files_directory
  * @property int    $frequency_minutes
  * @property int    $batch_size
+ * @property int    $processors_count
  *
  */
 class Cluster extends Model
@@ -35,6 +36,7 @@ class Cluster extends Model
         'files_directory',
         'frequency_minutes',
         'batch_size',
+        'processors_count',
     ];
 
     public function getKeyPath() : string
