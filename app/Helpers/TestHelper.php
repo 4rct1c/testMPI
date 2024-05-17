@@ -46,7 +46,7 @@ class TestHelper
 
     public function executeFile(?Test $test = null) : void
     {
-        $executeCommand = $this->file->generated_name;
+        $executeCommand = $this->getExecutionCommand();
         if ($test !== null){
             $executeCommand .= " " . $test->input;
         }
@@ -60,6 +60,11 @@ class TestHelper
     public function getCompileCommand() : string
     {
         return "mpiCC " . $this->file->generatedNameWithExtension() . " -o " . $this->file->generated_name;
+    }
+
+    public function getExecutionCommand() : string
+    {
+        return "mpirun -np " . $this->cluster->processors_count . " ./" . $this->file->generated_name;
     }
 
     protected function handleExecuteResponse(Process $process, ?Test $test = null) : bool
