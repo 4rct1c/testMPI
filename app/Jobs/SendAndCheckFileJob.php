@@ -44,8 +44,6 @@ class SendAndCheckFileJob implements ShouldQueue
 
         $filePath = Storage::path(TaskFile::DIRECTORY . $this->file->generatedNameWithExtension());
 
-
-
         $uploadProcess = $this->helper->createSshCommand()->upload($filePath, $this->cluster->files_directory);
         if (!$uploadProcess->isSuccessful()){
             Log::warning('SendJob: failed to upload file with id ' . $this->file->id .
@@ -73,13 +71,7 @@ class SendAndCheckFileJob implements ShouldQueue
         Log::debug("SendJob: file " . $this->file->originalNameWithExtension() .
             " (id " . $this->file->id . ") compiled. Received: " . $compileProcess->getOutput());
 
-        if ($this->file->ready_for_test){
-            $this->helper->runTests();
-        }
-        else
-        {
-            $this->helper->executeFile();
-        }
+        $this->file->ready_for_test ? $this->helper->runTests() : $this->helper->executeFile();
 
     }
 
