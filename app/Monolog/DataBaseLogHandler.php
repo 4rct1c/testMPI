@@ -50,12 +50,7 @@ class DataBaseLogHandler extends Handler
                 'context'   => $record->context,
                 'extra'     => $record->extra,
             ]);
-            $logRecord->level = $record['level_name'];
 
-            if ($this->owner)
-            {
-                $logRecord->owner()->associate($this->owner);
-            }
             $result = $logRecord->saveQuietly();
         }
         catch (Throwable)
