@@ -59,28 +59,15 @@ class StudentController extends Controller
             $extension = 'cpp';
         }
         $file->storeAs( TaskFile::DIRECTORY . "$generatedName.$extension");
-        try{
-            $taskFile = new TaskFile([
-                'task_id'        => $task->id,
-                'original_name'  => pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME),
-                'generated_name' => $generatedName,
-                'extension'      => $extension,
-                'size'           => $file->getSize(),
-                'ready_for_test' =>  $request->post('ready_for_test', 'true') === 'true',
-            ]);
-            $fileAdded = $taskFile->save();
-            if ($fileAdded){
-                $task->test_status_id = TestStatus::awaitingTest()->id;
-                if ($task->last_uploaded_at !== $currentDate->format('c')){
-                    $task->last_uploaded_at = $currentDate->format('c');
-                }
-                $task->save();
-            }
-            return $fileAdded;
-        } catch (\Exception $e){
-            Log::warning("Failed to upload file. Original exception: " . $e->getMessage());
-            return false;
-        }
+        return TaskFile::createRecord(
+            $task,
+            pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME),
+            $generatedName,
+            $extension,
+            $file->getSize(),
+            $request->post('ready_for_test', 'true') === 'true',
+            $currentDate
+        );
     }
 
 }

@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 /**
@@ -57,5 +59,42 @@ class TaskFile extends Model
             return false;
         }
         return false;
+    }
+
+    public static function createRecord(
+        Task $task,
+        string $originalName,
+        string $generatedName,
+        string $extension,
+        int $size,
+        bool $readyForTest,
+        ?Carbon $lastUploadedDate = null
+    ) : bool
+    {
+        if ($lastUploadedDate === null){
+            $lastUploadedDate = Carbon::now();
+        }
+        try{
+            $taskFile = new TaskFile([
+                'task_id'        => $task->id,
+                'original_name'  => $originalName,
+                'generated_name' => $generatedName,
+                'extension'      => $extension,
+                'size'           => $size,
+                'ready_for_test' => $readyForTest,
+            ]);
+            $fileAdded = $taskFile->save();
+            if ($fileAdded){
+                $task->test_status_id = TestStatus::awaitingTest()->id;
+                if ($task->last_uploaded_at !== $lastUploadedDate->format('c')){
+                    $task->last_uploaded_at = $lastUploadedDate->format('c');
+                }
+                $task->save();
+            }
+            return $fileAdded;
+        } catch (\Exception $e){
+            Log::warning("Failed to upload file. Original exception: " . $e->getMessage());
+            return false;
+        }
     }
 }
