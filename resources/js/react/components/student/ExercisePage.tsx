@@ -3,6 +3,7 @@ import {TaskFieldsBlock} from "./TaskFieldsBlock";
 import {ExerciseWithTaskTestStatusAndFile} from "../../types/types";
 import {TaskTestMessageBlock} from "./TaskTestMessageBlock";
 import Editor from "../Editor";
+import {UploadFileBlock} from "./UploadFileBlock";
 
 type Props = {
     exercise: ExerciseWithTaskTestStatusAndFile
@@ -30,8 +31,11 @@ const ExercisePage = (props: Props) => {
             </div>
         </div>
         <div className="column is-one-third-desktop">
-            <TaskFieldsBlock task={taskWasUploaded ? props.exercise.task : null}
-                             exercise={props.exercise} updateHandler={props.loadExercise}/>
+            {taskWasUploaded ? <TaskFieldsBlock task={props.exercise.task}
+                                                exercise={props.exercise} updateHandler={props.loadExercise}/> : <></>}
+            <UploadFileBlock exerciseId={props.exercise.id}
+                             taskId={taskWasUploaded ? props.exercise.task.id : null}
+                             updateHandler={props.loadExercise}/>
             {taskWasUploaded ? <TaskTestMessageBlock task={props.exercise.task}/> : <></>}
         </div>
     </div>

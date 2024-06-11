@@ -8,7 +8,7 @@ type Props = {
     updateHandler: Function
 }
 
-const UploadFileField = (props: Props) => {
+const UploadFileBlock = (props: Props) => {
 
     const messageInitialState = {
         show: false,
@@ -65,20 +65,20 @@ const UploadFileField = (props: Props) => {
     }
 
 
-    return <>
+    return <div className="box theme-light">
         <form>
             <div className="mt-3 is-flex">
-                <input type='file' name="file" onChange={event => setFile(event.target.files[0])}/>
+                <input type='file' name="file" onChange={event => setFile(event.target.files[0])} accept=".cpp, c"/>
                 <label className="is-flex is-align-content-center my-auto is-hoverable is-clickable">
-                    <input type='checkbox' name="ready_for_test" className="mr-1" checked={readyForTest} onClick={() => setReadyForTest(!readyForTest)}/>
-                    Готов для тестирования
+                    <input type='checkbox' name="ready_for_test" className="mr-1" checked={readyForTest} onChange={() => setReadyForTest(!readyForTest)}/>
+                    Готов для оценки
                 </label>
             </div>
         </form>
         <button className="button is-link my-2" onClick={uploadFileHandler}>Загрузить ответ</button>
         {message.show ? <p className={message.colorClass}>{message.text}</p> : <></>}
-    </>
+    </div>
 
 }
 
-export {UploadFileField}
+export {UploadFileBlock}

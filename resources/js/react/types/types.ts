@@ -96,6 +96,7 @@ export type TaskFile = {
     generated_name: string
     extension: string
     size: number
+    ready_for_test: boolean
     created_at?: string
     updated_at?: string
 }
