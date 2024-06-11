@@ -24,6 +24,7 @@ Route::get('/', function () {return redirect(\route('react'));})->name('default'
 Route::get('/portal/{path?}', [MainController::class, 'react'])
     ->where('path', '.*')->name('react');
 
+Route::get('/job/dispatch/', [SSHController::class, 'dispatchJob'])->name('dispatchJob');
 
 Route::group([
     'prefix' => 'api'
@@ -42,4 +43,3 @@ Route::group([
     Route::put('/test/update/', [TeacherController::class, 'updateTest'])->name('updateTest');
 });
 
-//Route::get('/ssh/test/', [SSHController::class, 'test'])->name('testSSH');
