@@ -48,6 +48,11 @@ class Exercise extends Model
             ->get();
     }
 
+    public static function withoutDeadline() : Collection
+    {
+        return static::whereNull('deadline')->orderBy('created_at')->get();
+    }
+
 
     public function awaitingTasks() : Collection
     {

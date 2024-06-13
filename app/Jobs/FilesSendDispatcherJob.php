@@ -46,6 +46,7 @@ class FilesSendDispatcherJob implements ShouldQueue
     {
         $dispatchedCounter = 0;
         $dispatchedCounter = $this->iterateTasks(Exercise::byDeadline(), $dispatchedCounter);
+        $this->iterateTasks(Exercise::withoutDeadline(), $dispatchedCounter);
         $this->iterateTasks(Exercise::byDeadline(true), $dispatchedCounter);
     }
 
