@@ -71,12 +71,12 @@ class Exercise extends Model
     }
 
 
-    public function tasksByTestStatus(string $testStatus) : Collection
+    public function tasksByTestStatus(string $testStatusCode) : Collection
     {
-        $statusRecord = TestStatus::where('code', $testStatus)->get()->first();
+        $statusRecord = TestStatus::where('code', $testStatusCode)->get()->first();
         if ($statusRecord === null) {
-            Log::error("Test status '$testStatus' isn't set");
-            return Collection::empty();
+            Log::debug("Exercise: creating test status with code '$testStatusCode'");
+            $statusRecord = TestStatus::findOrCreateByCode($testStatusCode);
         }
         return $this->tasks()->where('test_status_id', $statusRecord->id)->orderBy('last_uploaded_at')->get();
     }

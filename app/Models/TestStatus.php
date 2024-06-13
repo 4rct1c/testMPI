@@ -32,45 +32,63 @@ class TestStatus extends Model
         'label',
     ];
 
+    public const CODES_MAP = [
+        self::AWAITING_TEST_STATUS          => 'Ожидает тестирования',
+        self::COMPILATION_ERROR_STATUS      => 'Ошибка компиляции',
+        self::RUNTIME_ERROR_STATUS          => 'Ошибка',
+        self::AWAITING_CONFIRMATION_STATUS  => 'Ожидает подтверждения',
+        self::WRONG_ANSWER                  => 'Неправильный ответ',
+        self::RUNTIME_EXCEEDED              => 'Превышено время выполнения',
+        self::SUCCESS_STATUS                => 'Успешно',
+    ];
+
     public static function awaitingTest() : static
     {
-        return static::findOrCreateByCode(static::AWAITING_TEST_STATUS, 'Ожидает тестирования');
+        $code = static::AWAITING_TEST_STATUS;
+        return static::findOrCreateByCode($code, static::CODES_MAP[$code]);
     }
 
     public static function compilationError() : static
     {
-        return static::findOrCreateByCode(static::COMPILATION_ERROR_STATUS, 'Ошибка компиляции');
+        $code = static::COMPILATION_ERROR_STATUS;
+        return static::findOrCreateByCode($code, static::CODES_MAP[$code]);
     }
 
     public static function runtimeError() : static
     {
-        return static::findOrCreateByCode(static::RUNTIME_ERROR_STATUS, 'Ошибка');
+        $code = static::RUNTIME_ERROR_STATUS;
+        return static::findOrCreateByCode($code, static::CODES_MAP[$code]);
     }
 
     public static function awaitingConfirmation() : static
     {
-        return static::findOrCreateByCode(static::AWAITING_CONFIRMATION_STATUS, 'Ожидает подтверждения');
+        $code = static::AWAITING_CONFIRMATION_STATUS;
+        return static::findOrCreateByCode($code, static::CODES_MAP[$code]);
     }
 
     public static function wrongAnswer() : static
     {
-        return static::findOrCreateByCode(static::WRONG_ANSWER, 'Неправильный ответ');
+        $code = static::WRONG_ANSWER;
+        return static::findOrCreateByCode($code, static::CODES_MAP[$code]);
     }
 
     public static function runtimeExceeded() : static
     {
-        return static::findOrCreateByCode(static::RUNTIME_EXCEEDED, 'Превышено время выполнения');
+        $code = static::RUNTIME_EXCEEDED;
+        return static::findOrCreateByCode($code, static::CODES_MAP[$code]);
     }
 
     public static function successStatus() : static
     {
-        return static::findOrCreateByCode(static::SUCCESS_STATUS, 'Успешно');
+        $code = static::SUCCESS_STATUS;
+        return static::findOrCreateByCode($code, static::CODES_MAP[$code]);
     }
 
-    protected static function findOrCreateByCode(string $code, string $label) : static
+    public static function findOrCreateByCode(string $code, string $label = "") : static
     {
         $status = TestStatus::where('code', $code)->get()->first();
         if ($status === null){
+            $label = mb_strlen($label) ? $label : (static::CODES_MAP[$code] ?? "");
             $status = new TestStatus(['code' => $code, 'label' => $label]);
             $status->save();
         }
