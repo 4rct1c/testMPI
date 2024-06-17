@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -21,6 +22,7 @@ use Illuminate\Support\Facades\Storage;
  * @property boolean    $ready_for_test
  * @property string     $created_at
  * @property string     $updated_at
+ * @property Task       $task
  *
  */
 class TaskFile extends Model
@@ -96,5 +98,10 @@ class TaskFile extends Model
             Log::warning("Failed to upload file. Original exception: " . $e->getMessage());
             return false;
         }
+    }
+
+    public function task() : BelongsTo
+    {
+        return $this->belongsTo(Task::class);
     }
 }

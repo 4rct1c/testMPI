@@ -17,12 +17,20 @@ class SshHelper
     public const KEYS_DIRECTORY = '/var/www/.ssh/';
 
     protected TaskFile $file;
+    protected Task $task;
 
-    public function __construct(protected Cluster $cluster, protected Task $task)
+    public function __construct(protected Cluster $cluster, Task|TaskFile $taskOrTaskFile)
     {
-        $file = $this->task->file;
-        if ($file !== null) {
-            $this->file = $file;
+        if ($taskOrTaskFile instanceof Task){
+            $this->task = $taskOrTaskFile;
+            $file = $this->task->file;
+            if ($file !== null) {
+                $this->file = $file;
+            }
+        }
+        else {
+            $this->file = $taskOrTaskFile;
+            $this->task = $this->file->task;
         }
     }
 
