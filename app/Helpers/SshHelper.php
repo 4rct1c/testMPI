@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Log;
 use Spatie\Ssh\Ssh;
 use Symfony\Component\Process\Process;
 
-class TestHelper
+class SshHelper
 {
 
     public const KEYS_DIRECTORY = '/var/www/.ssh/';

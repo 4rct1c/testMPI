@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Helpers\TestHelper;
+use App\Helpers\SshHelper;
 use App\Models\Cluster;
 use App\Models\Task;
 use App\Models\TaskFile;
@@ -20,7 +20,7 @@ class SendAndCheckFileJob implements ShouldQueue
 
     protected ?TaskFile $file;
 
-    protected TestHelper $helper;
+    protected SshHelper $helper;
     /**
      * Create a new job instance.
      */
@@ -28,7 +28,7 @@ class SendAndCheckFileJob implements ShouldQueue
     {
         $this->onQueue('send_files');
         $this->file = $this->task->file;
-        $this->helper = new TestHelper($this->cluster, $this->task);
+        $this->helper = new SshHelper($this->cluster, $this->task);
     }
 
     /**

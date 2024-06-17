@@ -2,11 +2,9 @@
 
 namespace App\Models;
 
-use App\Helpers\TestHelper;
+use App\Helpers\SshHelper;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Collection;
 
 /**
  * @mixin Builder
@@ -41,7 +39,7 @@ class Cluster extends Model
 
     public function getKeyPath() : string
     {
-        return TestHelper::KEYS_DIRECTORY . $this->key_name;
+        return SshHelper::KEYS_DIRECTORY . $this->key_name;
     }
 
 
