@@ -50,21 +50,21 @@ class SshHelper
     {
         /** @var Test $test */
         foreach ($this->task->exercise->tests as $test){
-            $this->executeFile($test);
+            $process = $this->executeFile($test);
+            $this->handleExecuteResponse($process, $test);
         }
     }
 
-    public function executeFile(?Test $test = null) : void
+    public function executeFile(?Test $test = null) : Process
     {
         $executeCommand = $this->getExecutionCommand();
         if ($test !== null){
             $executeCommand .= " " . $test->input;
         }
-        $executeProcess = $this->createSshCommand()->execute([
+        return $this->createSshCommand()->execute([
             'cd ' . $this->cluster->files_directory,
             $executeCommand
         ]);
-        $this->handleExecuteResponse($executeProcess, $test);
     }
 
     public function getCompileCommand() : string
@@ -77,7 +77,7 @@ class SshHelper
         return "mpirun -np " . $this->cluster->processors_count . " ./" . $this->file->generated_name;
     }
 
-    protected function handleExecuteResponse(Process $process, ?Test $test = null) : bool
+    protected function handleExecuteResponse(Process $process, ?Test $test = null) : TestStatus
     {
         if (!$process->isSuccessful()){
             Log::debug('Helper: execution error in file ' . $this->file->originalNameWithExtension() .
@@ -88,26 +88,85 @@ class SshHelper
             $this->task->test_status_id = TestStatus::runtimeError()->id;
             $this->task->test_message = $process->getErrorOutput();
             $this->task->save();
-            return false;
+            return TestStatus::runtimeError();
         }
         Log::debug("Helper: file " . $this->file->originalNameWithExtension() . " executed. Returned: " . $process->getOutput());
 
-        if ($this->file->ready_for_test){
-            $testPassed = $this->checkTestResult($test, $process->getOutput());
-            $this->task->test_status_id = $testPassed ? TestStatus::successStatus()->id : TestStatus::wrongAnswer()->id;
+        if (!$this->file->ready_for_test || $test === null){
+            $this->task->test_status_id = TestStatus::awaitingConfirmation()->id;
             $this->task->test_message = $process->getOutput();
             $this->task->save();
-            return $testPassed;
+            return TestStatus::awaitingConfirmation();
         }
 
-        $this->task->test_status_id = TestStatus::awaitingConfirmation()->id;
-        $this->task->test_message = $process->getOutput();
+
+        $testPassed = $this->checkTestResult($test, $process->getOutput());
+        if (!$testPassed)
+        {
+            $testStatus = TestStatus::wrongAnswer();
+            $this->task->test_message = $test->error_message ?? $process->getOutput();
+
+            $this->task->test_status_id = $testStatus->id;
+            $this->task->save();
+            return $testStatus;
+        }
+
+        $timeLimitTestResult = $this->checkTimeLimit($test);
+        if (!$timeLimitTestResult['passed']){
+            $testStatus = TestStatus::runtimeExceeded();
+            $timeLimitExceededMessage = "Код выполнялся слишком долго: "
+                . $timeLimitTestResult['time'] . " мс. Целевое значение: " . $test->time_limit . " мс.";
+            $this->task->test_message = $timeLimitTestResult['passed'] === false ? $timeLimitExceededMessage : "Ошибка теста временного ограничения.";
+        }
+        else {
+            $testStatus = TestStatus::successStatus();
+            $this->task->test_message = 'Тесты пройдены успешно.';
+        }
+
+        $this->task->test_status_id = $testStatus->id;
         $this->task->save();
 
-        return false;
+        return $testStatus;
+
     }
 
     protected function checkTestResult(Test $test, string $output) : bool {
-        return trim($test->desired_output) == trim($output);
+        return trim($test->desired_result) == trim($output);
+    }
+
+    protected function checkTimeLimit(Test $test) : array
+    {
+        if (!$test->hasTimeLimit()){
+            return [
+                "passed" => null,
+                "time" => 0
+            ];
+        }
+        $executionCommand = $this->getExecutionCommand() . " " . $test->input;
+        $timeProcess = $this->createSshCommand()->execute([
+            'cd ' . $this->cluster->files_directory,
+            "ts=\$(date +%s%N) ; $executionCommand ; tt=\$(((\$(date +%s%N) - \$ts)/1000000)); echo \$tt"
+        ]);
+        if (!$timeProcess->isSuccessful()){
+            Log::warning("SshHelper: failed to execute time measure command. Output: " . $timeProcess->getErrorOutput());
+            return [
+                "passed" => null,
+                "time" => 0
+            ];
+        }
+        $executionTime = $timeProcess->getOutput();
+        if (!is_numeric($executionTime)){
+            Log::warning("SshHelper: execution time is not numeric");
+
+            return [
+                "passed" => null,
+                "time" => 0
+            ];
+        }
+        $executionTime = (int) $executionTime;
+        return [
+            "passed" => $test->time_limit <= $executionTime,
+            "time" => $executionTime
+        ];
     }
 }

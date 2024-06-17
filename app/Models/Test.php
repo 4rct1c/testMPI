@@ -34,5 +34,9 @@ class Test extends Model
         'error_message'
     ];
 
+    public function hasTimeLimit() : bool
+    {
+        return $this->time_limit !== null;
+    }
 
 }
