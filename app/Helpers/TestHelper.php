@@ -14,6 +14,8 @@ use Symfony\Component\Process\Process;
 class TestHelper
 {
 
+    public const KEYS_DIRECTORY = '/var/www/.ssh/';
+
     protected TaskFile $file;
 
     public function __construct(protected Cluster $cluster, protected Task $task)
