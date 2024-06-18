@@ -65,7 +65,7 @@ class SshHelper
                 $this->task->test_status_id = $testResult->status->id;
                 $this->task->test_message = $testResult->message;
                 $this->task->save();
-                break;
+                return;
             }
             if ($testResult->status->isWarning()){
                 Log::debug("Test " . $test->id . ". Result warning.");
