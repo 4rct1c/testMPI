@@ -48,11 +48,39 @@ class SshHelper
 
     public function runTests() : void
     {
+        $multiplier = 1;
+        $finalMessage = "";
         /** @var Test $test */
         foreach ($this->task->exercise->tests as $test){
             $process = $this->executeFile($test);
-            $this->handleExecuteResponse($process, $test);
+            $testResult = $this->handleExecuteResponse($process, $test);
+            if ($testResult->status->isSuccessful()){
+                continue;
+            }
+
+            if ($testResult->status->isError() || $testResult->status->isWrong()){
+                $this->task->test_status_id = $testResult->status->id;
+                $this->task->test_message = $testResult->message;
+                $this->task->save();
+                break;
+            }
+            if ($testResult->status->isWarning()){
+                $multiplier *= $test->overdue_multiplier;
+                $finalMessage .= $testResult->message . "\n";
+            }
         }
+        if ($multiplier !== 1){
+            $this->task->test_status_id = TestStatus::runtimeExceeded()->id;
+            $this->task->test_message = $finalMessage;
+            $this->task->mark = $this->task->exercise->max_score * $multiplier;
+            $this->task->save();
+            return;
+        }
+        $this->task->test_status_id = TestStatus::successStatus()->id;
+        $this->task->test_message = "Тесты пройдены успешно";
+        $this->task->mark = $this->task->exercise->max_score;
+        $this->task->save();
+
     }
 
     public function executeFile(?Test $test = null) : Process
@@ -77,7 +105,7 @@ class SshHelper
         return "mpirun -np " . $this->cluster->processors_count . " ./" . $this->file->generated_name;
     }
 
-    protected function handleExecuteResponse(Process $process, ?Test $test = null) : TestStatus
+    protected function handleExecuteResponse(Process $process, ?Test $test = null) : TestResult
     {
         if (!$process->isSuccessful()){
             Log::debug('Helper: execution error in file ' . $this->file->originalNameWithExtension() .
@@ -85,48 +113,32 @@ class SshHelper
                 "\nStatus: " . $process->getStatus() .
                 "\nError output: " . $process->getErrorOutput()
             );
-            $this->task->test_status_id = TestStatus::runtimeError()->id;
-            $this->task->test_message = $process->getErrorOutput();
-            $this->task->save();
-            return TestStatus::runtimeError();
+            return new TestResult(TestStatus::runtimeError(), $process->getErrorOutput());
         }
         Log::debug("Helper: file " . $this->file->originalNameWithExtension() . " executed. Returned: " . $process->getOutput());
 
         if (!$this->file->ready_for_test || $test === null){
-            $this->task->test_status_id = TestStatus::awaitingConfirmation()->id;
-            $this->task->test_message = $process->getOutput();
-            $this->task->save();
-            return TestStatus::awaitingConfirmation();
+            return new TestResult(TestStatus::awaitingConfirmation(), $process->getOutput());
         }
 
 
         $testPassed = $this->checkTestResult($test, $process->getOutput());
         if (!$testPassed)
         {
-            $testStatus = TestStatus::wrongAnswer();
-            $this->task->test_message = $test->error_message ?? $process->getOutput();
-
-            $this->task->test_status_id = $testStatus->id;
-            $this->task->save();
-            return $testStatus;
+            return new TestResult(TestStatus::wrongAnswer(), $this->task->test_message = $test->error_message ?? $process->getOutput());
         }
 
         $timeLimitTestResult = $this->checkTimeLimit($test);
         if (!$timeLimitTestResult['passed']){
-            $testStatus = TestStatus::runtimeExceeded();
             $timeLimitExceededMessage = "Код выполнялся слишком долго: "
                 . $timeLimitTestResult['time'] . " мс. Целевое значение: " . $test->time_limit . " мс.";
-            $this->task->test_message = $timeLimitTestResult['passed'] === false ? $timeLimitExceededMessage : "Ошибка теста временного ограничения.";
-        }
-        else {
-            $testStatus = TestStatus::successStatus();
-            $this->task->test_message = 'Тесты пройдены успешно.';
+            $testErrorMessage = "Ошибка теста временного ограничения.";
+            $testOverdue = $timeLimitTestResult['passed'] === false;
+            $message = $testOverdue ? $timeLimitExceededMessage : $testErrorMessage;
+            return new TestResult(TestStatus::runtimeExceeded(), $message);
         }
 
-        $this->task->test_status_id = $testStatus->id;
-        $this->task->save();
-
-        return $testStatus;
+        return new TestResult(TestStatus::successStatus(), 'Тесты пройдены успешно.');
 
     }
 
