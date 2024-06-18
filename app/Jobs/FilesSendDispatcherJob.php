@@ -19,6 +19,8 @@ class FilesSendDispatcherJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
 
+    public $tries = 1;
+
     protected ?Cluster $cluster;
 
     /**
@@ -36,25 +38,31 @@ class FilesSendDispatcherJob implements ShouldQueue
     public function handle(): void
     {
         if ($this->cluster === null) {
-            Log::warning('Cluster not found!');
+            Log::error('Cluster not found!');
             return;
         }
         self::dispatch($this->cluster->id)->delay(Carbon::now()->addMinutes($this->cluster->frequency_minutes));
         if ($this->isClusterAvailable()) {
             $this->dispatchSendJobs();
         } else {
-            Log::warning('DispatcherJob: cluster "' . $this->cluster->host
+            Log::error('DispatcherJob: cluster "' . $this->cluster->host
                 . '" (id=' . $this->cluster->id . ') is not available!');
         }
     }
 
     protected function isClusterAvailable(): bool
     {
-        return Ssh::create($this->cluster->username, $this->cluster->host, $this->cluster->port)
-            ->setTimeout(30)
-            ->usePrivateKey($this->cluster->getKeyPath())
-            ->execute('ls')
-            ->isSuccessful();
+        try {
+            return Ssh::create($this->cluster->username, $this->cluster->host, $this->cluster->port)
+                ->setTimeout(30)
+                ->usePrivateKey($this->cluster->getKeyPath())
+                ->execute('ls')
+                ->isSuccessful();
+        }
+        catch (\Exception $exception){
+            Log::error("Failed to connect to cluster. Exception: " . $exception->getMessage());
+            return false;
+        }
     }
 
 
