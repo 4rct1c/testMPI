@@ -23,7 +23,7 @@ class DeleteFileJob implements ShouldQueue
      */
     public function __construct(protected Cluster $cluster, protected TaskFile $file)
     {
-        $this->onQueue('clear_files');
+        $this->onQueue('send_files');
         $this->helper = new SshHelper($this->cluster, $this->file);
     }
 
@@ -32,13 +32,20 @@ class DeleteFileJob implements ShouldQueue
      */
     public function handle(): void
     {
-        Log::debug("DeleteFileJob: deleting file " . $this->file->generatedNameWithExtension());
         $removeFileCommand = 'rm ' . $this->cluster->files_directory . '/' . $this->file->generatedNameWithExtension();
         $removeFileProcess = $this->helper->createSshCommand()->execute($removeFileCommand);
         if ($removeFileProcess->isSuccessful()){
             Log::debug("DeleteFileJob: file " . $this->file->generatedNameWithExtension() . " was deleted.");
         } else {
             Log::warning("DeleteFileJob: file wasn't deleted. Error: " . $removeFileProcess->getErrorOutput());
+        }
+
+        $removeCompiledFileCommand = 'rm ' . $this->cluster->files_directory . '/' . $this->file->generated_name;
+        $removeCompiledFileProcess = $this->helper->createSshCommand()->execute($removeCompiledFileCommand);
+        if ($removeCompiledFileProcess->isSuccessful()){
+            Log::debug("DeleteFileJob: file " . $this->file->generated_name . " was deleted.");
+        } else {
+            Log::warning("DeleteFileJob: file wasn't deleted. Error: " . $removeCompiledFileProcess->getErrorOutput());
         }
     }
 }

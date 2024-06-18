@@ -45,7 +45,7 @@ class SendAndCheckFileJob implements ShouldQueue
         $filePath = Storage::path(TaskFile::DIRECTORY . $this->file->generatedNameWithExtension());
 
         $uploadProcess = $this->helper->createSshCommand()->upload($filePath, $this->cluster->files_directory);
-        DeleteFileJob::dispatch($this->cluster, $this->file);
+        DeleteFileJob::dispatch($this->cluster, $this->file)->delay($this->cluster->frequency_minutes * 60);
         if (!$uploadProcess->isSuccessful()){
             Log::warning('SendJob: failed to upload file with id ' . $this->file->id .
                 "\nStatus: " . $uploadProcess->getStatus() .
