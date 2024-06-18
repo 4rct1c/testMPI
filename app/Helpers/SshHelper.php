@@ -144,7 +144,15 @@ class SshHelper
     }
 
     protected function checkTestResult(Test $test, string $output) : bool {
-        return trim($test->desired_result) == trim($output);
+        $output = trim($output);
+        if (!is_numeric($test->desired_result)){
+            return trim($test->desired_result) == trim($output);
+        }
+        if (!is_numeric($output)){
+            return false;
+        }
+        return abs((float)$test->desired_result - (float)$output) < $test->max_divergence;
+
     }
 
     protected function checkTimeLimit(Test $test) : array
