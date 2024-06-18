@@ -12,6 +12,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
+use Spatie\Ssh\Ssh;
 
 class FilesSendDispatcherJob implements ShouldQueue
 {
@@ -19,6 +20,7 @@ class FilesSendDispatcherJob implements ShouldQueue
 
 
     protected ?Cluster $cluster;
+
     /**
      * Create a new job instance.
      */
@@ -37,12 +39,26 @@ class FilesSendDispatcherJob implements ShouldQueue
             Log::warning('Cluster not found!');
             return;
         }
-        $this->dispatchSendJobs();
         self::dispatch($this->cluster->id)->delay(Carbon::now()->addMinutes($this->cluster->frequency_minutes));
+        if ($this->isClusterAvailable()) {
+            $this->dispatchSendJobs();
+        } else {
+            Log::warning('DispatcherJob: cluster "' . $this->cluster->host
+                . '" (id=' . $this->cluster->id . ') is not available!');
+        }
+    }
+
+    protected function isClusterAvailable(): bool
+    {
+        return Ssh::create($this->cluster->username, $this->cluster->host, $this->cluster->port)
+            ->setTimeout(30)
+            ->usePrivateKey($this->cluster->getKeyPath())
+            ->execute('ls')
+            ->isSuccessful();
     }
 
 
-    protected function dispatchSendJobs() : void
+    protected function dispatchSendJobs(): void
     {
         $dispatchedCounter = 0;
         $dispatchedCounter = $this->iterateTasks(Exercise::byDeadline(), $dispatchedCounter);
@@ -50,12 +66,12 @@ class FilesSendDispatcherJob implements ShouldQueue
         $this->iterateTasks(Exercise::byDeadline(true), $dispatchedCounter);
     }
 
-    protected function iterateTasks(Collection $exercises, int $dispatchedCounter) : int
+    protected function iterateTasks(Collection $exercises, int $dispatchedCounter): int
     {
         /** @var Exercise $exercise */
-        foreach ($exercises as $exercise){
-            foreach ($exercise->awaitingTasks() as $task){
-                if ($dispatchedCounter >= $this->cluster->batch_size){
+        foreach ($exercises as $exercise) {
+            foreach ($exercise->awaitingTasks() as $task) {
+                if ($dispatchedCounter >= $this->cluster->batch_size) {
                     return $dispatchedCounter;
                 }
                 SendAndCheckFileJob::dispatch($this->cluster, $task);

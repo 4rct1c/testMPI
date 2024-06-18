@@ -36,6 +36,7 @@ class SshHelper
 
     public function createSshCommand() : Ssh {
         return Ssh::create($this->cluster->username, $this->cluster->host, $this->cluster->port)
+            ->setTimeout(60)
             ->usePrivateKey($this->cluster->getKeyPath());
     }
 
