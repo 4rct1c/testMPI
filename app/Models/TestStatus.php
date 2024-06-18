@@ -135,7 +135,7 @@ class TestStatus extends Model
     {
         $status = TestStatus::where('code', $code)->get()->first();
         if ($status === null){
-            $label = mb_strlen($label) ? $label : (static::CODES_MAP[$code] ?? "");
+            $label = mb_strlen($label) ? $label : (static::CODES_MAP[$code]['message'] ?? "");
             $status = new TestStatus(['code' => $code, 'label' => $label]);
             $status->save();
         }
