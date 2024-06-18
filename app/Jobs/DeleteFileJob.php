@@ -23,7 +23,7 @@ class DeleteFileJob implements ShouldQueue
      */
     public function __construct(protected Cluster $cluster, protected TaskFile $file)
     {
-        $this->onQueue('send_files');
+        $this->onQueue('delete_files');
         $this->helper = new SshHelper($this->cluster, $this->file);
     }
 
