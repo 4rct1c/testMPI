@@ -56,16 +56,19 @@ class SshHelper
             $process = $this->executeFile($test);
             $testResult = $this->handleExecuteResponse($process, $test);
             if ($testResult->status->isSuccessful()){
+                Log::debug("Test " . $test->id . ". Result success.");
                 continue;
             }
 
             if ($testResult->status->isError() || $testResult->status->isWrong()){
+                Log::debug("Test " . $test->id . ". Result " . ($testResult->status->isError() ? "error" : "wrong") . ".");
                 $this->task->test_status_id = $testResult->status->id;
                 $this->task->test_message = $testResult->message;
                 $this->task->save();
                 break;
             }
             if ($testResult->status->isWarning()){
+                Log::debug("Test " . $test->id . ". Result warning.");
                 $multiplier *= $test->overdue_multiplier;
                 $finalMessage .= $testResult->message . "\n";
             }
@@ -75,12 +78,14 @@ class SshHelper
             $this->task->test_message = $finalMessage;
             $this->task->mark = $this->task->exercise->max_score * $multiplier;
             $this->task->save();
+            Log::debug("Final result warning.");
             return;
         }
         $this->task->test_status_id = TestStatus::successStatus()->id;
         $this->task->test_message = "Тесты пройдены успешно";
         $this->task->mark = $this->task->exercise->max_score;
         $this->task->save();
+        Log::debug("Final result success.");
 
     }
 
@@ -124,6 +129,8 @@ class SshHelper
 
 
         $testPassed = $this->checkTestResult($test, $process->getOutput());
+        Log::debug("Test " . $test->id . ". Desired: " . $test->desired_result . ". Got: " . $process->getOutput() . ". Result: " . ($testPassed ? "passed" : "failed") . ".");
+
         if (!$testPassed)
         {
             return new TestResult(TestStatus::wrongAnswer(), $this->task->test_message = $test->error_message ?? $process->getOutput());
