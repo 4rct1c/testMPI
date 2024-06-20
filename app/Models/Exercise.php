@@ -66,6 +66,13 @@ class Exercise extends Model
     }
 
 
+    public function warningTasks() : Collection
+    {
+        return $this->tasksByTestStatus(TestStatus::RUNTIME_EXCEEDED);
+    }
+
+
+
     public function failedTasks() : Collection
     {
         $result = $this->tasksByTestStatus(TestStatus::WRONG_ANSWER);

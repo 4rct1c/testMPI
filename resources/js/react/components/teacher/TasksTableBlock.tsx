@@ -24,7 +24,7 @@ const TasksTableBlock = (props: Props) => {
                 </tr>
                 </thead>
                 <tbody>
-                {props.exercise.tasks.map(task => <TaskItem task={task} user={props.users.filter(user => user.id === task.user_id)[0] ?? null}/>)}
+                {props.exercise.tasks.filter(task => task.file !== undefined && task.file.ready_for_test).map(task => <TaskItem task={task} user={props.users.filter(user => user.id === task.user_id)[0] ?? null}/>)}
                 </tbody>
             </table>
         </div>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Course;
 use App\Models\Exercise;
 use App\Models\Group;
+use App\Models\Task;
 use App\Models\Test;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
@@ -43,7 +44,7 @@ class TeacherController extends Controller
         $groups = Group::with(['courses' => function($query) {
             $query->with(['exercises' => function($query) {
                 $query->with(['tasks' => function($query) {
-                    $query->with('file', 'test_status');
+                    $query->with('test_status', 'file');
                 }])->orderBy('deadline');
             }]);
         }])->get();
@@ -62,6 +63,12 @@ class TeacherController extends Controller
                 /** @var Exercise $exercise */
                 foreach ($course->exercises as $key => $exercise){
                     $course->exercises->put($key, static::addAttributesToExercise($exercise, $studentsCount));
+                    /** @var  Task $task*/
+                    foreach ($exercise->tasks as $taskKey => $task){
+                        if ($task->file === null || !$task->file->ready_for_test){
+                            unset($exercise->tasks[$taskKey]);
+                        }
+                    }
                 }
             }
             $result[] = $group;
@@ -111,12 +118,22 @@ class TeacherController extends Controller
 
     private static function addAttributesToExercise(Exercise $exercise, int $studentsCount) : Exercise
     {
-        $exercise->loaded_tasks = count($exercise->tasks);
-        $exercise->failed_tasks = count($exercise->failedTasks());
-        $exercise->succeeded_tasks = count($exercise->succeededTasks());
-        $exercise->awaiting_tasks = count($exercise->awaitingTasks());
+        $exercise->failed_tasks = count(static::filterNotReadyTasks($exercise->failedTasks())) + count(static::filterNotReadyTasks($exercise->warningTasks()));
+        $exercise->succeeded_tasks = count(static::filterNotReadyTasks($exercise->succeededTasks()));
+        $exercise->awaiting_tasks = count(static::filterNotReadyTasks($exercise->awaitingTasks()));
+        $exercise->loaded_tasks = $exercise->failed_tasks + $exercise->succeeded_tasks + $exercise->awaiting_tasks;
         $exercise->students_count = $studentsCount;
         return $exercise;
+    }
+
+    private static function filterNotReadyTasks(Collection $tasks) : Collection
+    {
+        foreach ($tasks as $key => $task){
+            if ($task->file !== null && !$task->file->ready_for_test){
+                $tasks->forget($key);
+            }
+        }
+        return $tasks;
     }
 
 }
