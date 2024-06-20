@@ -1,4 +1,4 @@
-import {ExerciseWithTaskTestStatusAndFile} from "../../types/types";
+import {ColoredMessage, ExerciseWithTaskTestStatusAndFile} from "../../types/types";
 import {ExercisePropertiesBlock} from "./ExercisePropertiesBlock";
 import Editor from "../Editor";
 import {useState} from "react";
@@ -12,7 +12,13 @@ type Props = {
 
 const EditExercisePage = (props: Props) => {
 
+    const messageInitial = {
+        'text': "",
+        'colorClass': ""
+    }
+
     const [exercise, setExercise] = useState(props.exercise)
+    const [applyMessage, setApplyMessage] = useState<ColoredMessage>(messageInitial)
 
 
     const updateExerciseAxios = () => {
@@ -30,14 +36,28 @@ const EditExercisePage = (props: Props) => {
     }
 
     const applyHandler = () => {
+        setApplyMessage(messageInitial)
         updateExerciseAxios().then(r => {
-            r.data ? props.setExercise(exercise) : setExercise(props.exercise)
+            if (r.data){
+                props.setExercise(exercise)
+                setApplyMessage({
+                    'text': 'Изменено',
+                    'colorClass': 'has-text-success'
+                })
+            } else{
+                setExercise(props.exercise)
+                setApplyMessage({
+                    'text': 'Ошибка',
+                    'colorClass': 'has-text-danger'
+                })
+            }
         })
     }
 
 
     const cancelHandler = () => {
         setExercise(props.exercise)
+        setApplyMessage(messageInitial)
     }
 
 
@@ -60,6 +80,7 @@ const EditExercisePage = (props: Props) => {
                                      setExercise={setExercise}
                                      applyHandler={applyHandler}
                                      cancelHandler={cancelHandler}
+                                     message={applyMessage}
             />
         </div>
     </div>

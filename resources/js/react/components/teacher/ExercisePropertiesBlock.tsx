@@ -1,4 +1,4 @@
-import {Exercise} from "../../types/types";
+import {ColoredMessage, Exercise} from "../../types/types";
 
 
 type Props = {
@@ -6,6 +6,7 @@ type Props = {
     setExercise: Function
     applyHandler: Function
     cancelHandler: Function
+    message: ColoredMessage
 }
 
 
@@ -97,6 +98,9 @@ const ExercisePropertiesBlock = (props: Props) => {
             <div className="mt-2">
                 <button className="button is-link" onClick={props.applyHandler}>Применить</button>
                 <button className="button is-danger ml-2" onClick={props.cancelHandler}>Отменить</button>
+            </div>
+            <div>
+                <span className={props.message.colorClass}>{props.message.text}</span>
             </div>
         </div>
     </div>
