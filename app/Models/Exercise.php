@@ -69,10 +69,8 @@ class Exercise extends Model
     public function failedTasks() : Collection
     {
         $result = $this->tasksByTestStatus(TestStatus::WRONG_ANSWER);
-        $result->merge($this->tasksByTestStatus(TestStatus::COMPILATION_ERROR_STATUS));
-        $result->merge($this->tasksByTestStatus(TestStatus::RUNTIME_ERROR_STATUS));
-        $result->merge($this->tasksByTestStatus(TestStatus::RUNTIME_EXCEEDED));
-        return $result;
+        $result = $result->merge($this->tasksByTestStatus(TestStatus::COMPILATION_ERROR_STATUS));
+        return $result->merge($this->tasksByTestStatus(TestStatus::RUNTIME_ERROR_STATUS));
     }
 
 
