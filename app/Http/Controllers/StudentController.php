@@ -5,13 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Exercise;
 use App\Models\Task;
 use App\Models\TaskFile;
-use App\Models\TestStatus;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class StudentController extends Controller
@@ -22,9 +20,11 @@ class StudentController extends Controller
         /** @var User $user */
         $user = Auth::user();
         return $user->group
-                ?->courses()
-                ->with('exercises')
-                ->get() ?? Collection::empty();
+                    ?->courses()
+                    ->with(['exercises' => function($query) {
+                        $query->where('is_hidden', false);
+                    }])
+                    ->get() ?? Collection::empty();
     }
 
     public function loadTasks(): Collection
