@@ -42,7 +42,9 @@ class TeacherController extends Controller
     public function loadGroups() : array {
         $groups = Group::with(['courses' => function($query) {
             $query->with(['exercises' => function($query) {
-                $query->orderBy('deadline');
+                $query->with(['tasks' => function($query) {
+                    $query->with('file', 'test_status');
+                }])->orderBy('deadline');
             }]);
         }])->get();
         $result = [];
@@ -114,10 +116,6 @@ class TeacherController extends Controller
         $exercise->succeeded_tasks = count($exercise->succeededTasks());
         $exercise->awaiting_tasks = count($exercise->awaitingTasks());
         $exercise->students_count = $studentsCount;
-        foreach ($exercise->tasks as $task){
-            $task->file;
-            $task->test_status;
-        }
         return $exercise;
     }
 
