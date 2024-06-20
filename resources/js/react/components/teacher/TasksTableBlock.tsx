@@ -20,7 +20,6 @@ const TasksTableBlock = (props: Props) => {
                     <th>Файл</th>
                     <th>Комментарий студента</th>
                     <th>Мой комментарий</th>
-                    <th>Действия</th>
                 </tr>
                 </thead>
                 <tbody>

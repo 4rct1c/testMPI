@@ -10,6 +10,7 @@ export type ApiRoutes = {
     load_exercise_students: string
     update_test: string
     add_test: string
+    update_mark: string
 }
 
 export type Course = {

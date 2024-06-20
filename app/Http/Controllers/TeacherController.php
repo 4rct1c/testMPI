@@ -76,6 +76,15 @@ class TeacherController extends Controller
         return $result;
     }
 
+    public function updateMark(Request $request) : bool {
+        $task = Task::find($request->post('task_id'));
+        if ($task === null){
+            return false;
+        }
+        $task->mark = $request->post('mark');
+        return $task->save();
+    }
+
     public function loadExerciseStudents(?int $exerciseId = null): Collection
     {
         if ($exerciseId === null){
