@@ -32,7 +32,11 @@ class TeacherController extends Controller
     }
 
     public function loadGroups() : array {
-        $groups = Group::with('courses')->get();
+        $groups = Group::with(['courses' => function($query) {
+            $query->with(['exercises' => function($query) {
+                $query->orderBy('deadline');
+            }]);
+        }])->get();
         $result = [];
         /** @var Group $group */
         foreach ($groups as $group) {

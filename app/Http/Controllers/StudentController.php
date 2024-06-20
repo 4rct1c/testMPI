@@ -22,7 +22,8 @@ class StudentController extends Controller
         return $user->group
                     ?->courses()
                     ->with(['exercises' => function($query) {
-                        $query->where('is_hidden', false);
+                        $query->where('is_hidden', false)
+                            ->orderBy('deadline');
                     }])
                     ->get() ?? Collection::empty();
     }
