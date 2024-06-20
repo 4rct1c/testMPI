@@ -6,6 +6,7 @@ type Props = {
     setExercise: Function
     applyHandler: Function
     cancelHandler: Function
+    deleteHandler: Function
     message: ColoredMessage
 }
 
@@ -95,9 +96,10 @@ const ExercisePropertiesBlock = (props: Props) => {
                     Скрыто
                 </label>
             </div>
-            <div className="mt-2">
+            <div className="mt-2 is-flex">
                 <button className="button is-link" onClick={props.applyHandler}>Применить</button>
-                <button className="button is-danger ml-2" onClick={props.cancelHandler}>Отменить</button>
+                <button className="button is-danger is-light ml-2" onClick={props.cancelHandler}>Отменить</button>
+                <button className="button is-danger ml-auto mr-0" onClick={props.deleteHandler}>Удалить</button>
             </div>
             <div>
                 <span className={props.message.colorClass}>{props.message.text}</span>

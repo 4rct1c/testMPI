@@ -31,6 +31,14 @@ class TeacherController extends Controller
         return $exercise->save();
     }
 
+    public function deleteExercise(int $exerciseId) : bool {
+        $exercise = Exercise::find($exerciseId);
+        if ($exercise === null){
+            return false;
+        }
+        return $exercise->delete() ?? false;
+    }
+
     public function loadGroups() : array {
         $groups = Group::with(['courses' => function($query) {
             $query->with(['exercises' => function($query) {

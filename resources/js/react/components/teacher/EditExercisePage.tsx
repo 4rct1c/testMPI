@@ -4,6 +4,7 @@ import Editor from "../Editor";
 import {useState} from "react";
 import axios from "axios";
 import {getApiRoutes} from "../../main";
+import {useNavigate} from "react-router-dom";
 
 type Props = {
     exercise: ExerciseWithTaskTestStatusAndFile
@@ -11,6 +12,8 @@ type Props = {
 }
 
 const EditExercisePage = (props: Props) => {
+
+    const navigate = useNavigate()
 
     const messageInitial = {
         'text': "",
@@ -33,6 +36,10 @@ const EditExercisePage = (props: Props) => {
             is_hidden: exercise.is_hidden,
             }
         )
+    }
+
+    const deleteExerciseAxios = () => {
+        return axios.delete(getApiRoutes().delete_exercise + '/' + exercise.id)
     }
 
     const applyHandler = () => {
@@ -60,6 +67,27 @@ const EditExercisePage = (props: Props) => {
         setApplyMessage(messageInitial)
     }
 
+    const deleteHandler = () => {
+        deleteExerciseAxios().then(r => {
+            if (r.data) {
+                navigate('/portal')
+            } else {
+                setExercise(props.exercise)
+                setApplyMessage({
+                    'text': 'Ошибка',
+                    'colorClass': 'has-text-danger'
+                })
+            }
+        }, error => {
+            console.log(error)
+            setExercise(props.exercise)
+            setApplyMessage({
+                'text': 'Ошибка',
+                'colorClass': 'has-text-danger'
+            })
+        })
+    }
+
 
     const changeText = (newText) => {
         let handledExercise = {...exercise}
@@ -80,6 +108,7 @@ const EditExercisePage = (props: Props) => {
                                      setExercise={setExercise}
                                      applyHandler={applyHandler}
                                      cancelHandler={cancelHandler}
+                                     deleteHandler={deleteHandler}
                                      message={applyMessage}
             />
         </div>

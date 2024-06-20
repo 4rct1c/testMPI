@@ -38,6 +38,7 @@ Route::group([
 
     Route::get('/exercise/load-students/{id?}', [TeacherController::class, 'loadExerciseStudents'])->name('loadExerciseStudents');
     Route::put('/exercise/update/', [TeacherController::class, 'updateExercise'])->name('updateExercise');
+    Route::delete('/exercise/delete/{exerciseId?}', [TeacherController::class, 'deleteExercise'])->name('deleteExercise');
     Route::get('/groups/load/', [TeacherController::class, 'loadGroups'])->name('loadGroups');
     Route::post('/test/add/', [TeacherController::class, 'addTest'])->name('addTest');
     Route::put('/test/update/', [TeacherController::class, 'updateTest'])->name('updateTest');

@@ -18,6 +18,7 @@ class RoutesHelper
             'load_exercise_students' => route(name: 'loadExerciseStudents', absolute: false),
             'add_test' => route(name: 'addTest', absolute: false),
             'update_test' => route(name: 'updateTest', absolute: false),
+            'delete_exercise' => route(name: 'deleteExercise', absolute: false),
         ];
     }
 }

@@ -5,6 +5,7 @@ export type ApiRoutes = {
     upload_file: string
     load_user: string
     update_exercise: string
+    delete_exercise: string
     load_groups: string
     load_exercise_students: string
     update_test: string
