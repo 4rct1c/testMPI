@@ -2,6 +2,7 @@
 
 namespace App\Helpers;
 
+use App\Enums\TestStatusesEnum;
 use App\Models\Cluster;
 use App\Models\Task;
 use App\Models\TaskFile;
@@ -42,7 +43,7 @@ class SshHelper
 
     public function handleCompilationError(string $errorMessage) : void
     {
-        $this->task->test_status_id = TestStatus::compilationError()->id;
+        $this->task->test_status_id = TestStatus::findOrCreateByEnum(TestStatusesEnum::CompilationError)->id;
         $this->task->test_message = $errorMessage;
         $this->task->save();
     }
@@ -55,33 +56,33 @@ class SshHelper
         foreach ($this->task->exercise->tests as $test){
             $process = $this->executeFile($test);
             $testResult = $this->handleExecuteResponse($process, $test);
-            if ($testResult->status->isSuccessful()){
+            if ($testResult->status->getEnum()->isSuccessful()){
                 Log::debug("Test " . $test->id . ". Result success.");
                 continue;
             }
 
-            if ($testResult->status->isError() || $testResult->status->isWrong()){
-                Log::debug("Test " . $test->id . ". Result " . ($testResult->status->isError() ? "error" : "wrong") . ".");
+            if ($testResult->status->getEnum()->isError() || $testResult->status->getEnum()->isWrong()){
+                Log::debug("Test " . $test->id . ". Result " . ($testResult->status->getEnum()->isError() ? "error" : "wrong") . ".");
                 $this->task->test_status_id = $testResult->status->id;
                 $this->task->test_message = $testResult->message;
                 $this->task->save();
                 return;
             }
-            if ($testResult->status->isWarning()){
+            if ($testResult->status->getEnum()->isWarning()){
                 Log::debug("Test " . $test->id . ". Result warning.");
                 $multiplier *= $test->overdue_multiplier;
                 $finalMessage .= $testResult->message . "\n";
             }
         }
         if ($multiplier !== 1){
-            $this->task->test_status_id = TestStatus::runtimeExceeded()->id;
+            $this->task->test_status_id = TestStatus::findOrCreateByEnum(TestStatusesEnum::RuntimeExceeded)->id;
             $this->task->test_message = $finalMessage;
             $this->task->mark = $this->task->exercise->max_score * $multiplier;
             $this->task->save();
             Log::debug("Final result warning.");
             return;
         }
-        $this->task->test_status_id = TestStatus::successStatus()->id;
+        $this->task->test_status_id = TestStatus::findOrCreateByEnum(TestStatusesEnum::Success)->id;
         $this->task->test_message = "Тесты пройдены успешно";
         $this->task->mark = $this->task->exercise->max_score;
         $this->task->save();
@@ -119,12 +120,12 @@ class SshHelper
                 "\nStatus: " . $process->getStatus() .
                 "\nError output: " . $process->getErrorOutput()
             );
-            return new TestResult(TestStatus::runtimeError(), $process->getErrorOutput());
+            return new TestResult(TestStatus::findOrCreateByEnum(TestStatusesEnum::RuntimeError), $process->getErrorOutput());
         }
         Log::debug("Helper: file " . $this->file->originalNameWithExtension() . " executed. Returned: " . $process->getOutput());
 
         if (!$this->file->ready_for_test || $test === null){
-            return new TestResult(TestStatus::awaitingConfirmation(), $process->getOutput());
+            return new TestResult(TestStatus::findOrCreateByEnum(TestStatusesEnum::AwaitingConfirmation), $process->getOutput());
         }
 
 
@@ -133,7 +134,7 @@ class SshHelper
 
         if (!$testPassed)
         {
-            return new TestResult(TestStatus::wrongAnswer(), $this->task->test_message = $test->error_message ?? $process->getOutput());
+            return new TestResult(TestStatus::findOrCreateByEnum(TestStatusesEnum::WrongAnswer), $this->task->test_message = $test->error_message ?? $process->getOutput());
         }
 
         $timeLimitTestResult = $this->checkTimeLimit($test);
@@ -143,10 +144,10 @@ class SshHelper
             $testErrorMessage = "Ошибка теста временного ограничения.";
             $testOverdue = $timeLimitTestResult['passed'] === false;
             $message = $testOverdue ? $timeLimitExceededMessage : $testErrorMessage;
-            return new TestResult(TestStatus::runtimeExceeded(), $message);
+            return new TestResult(TestStatus::findOrCreateByEnum(TestStatusesEnum::RuntimeExceeded), $message);
         }
 
-        return new TestResult(TestStatus::successStatus(), 'Тесты пройдены успешно.');
+        return new TestResult(TestStatus::findOrCreateByEnum(TestStatusesEnum::Success), 'Тесты пройдены успешно.');
 
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\TestStatusesEnum;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -56,37 +57,37 @@ class Exercise extends Model
 
     public function awaitingTasks() : Collection
     {
-        return $this->tasksByTestStatus(TestStatus::AWAITING_TEST_STATUS);
+        return $this->tasksByTestStatus(TestStatusesEnum::Awaiting);
     }
 
 
     public function succeededTasks() : Collection
     {
-        return $this->tasksByTestStatus(TestStatus::SUCCESS_STATUS);
+        return $this->tasksByTestStatus(TestStatusesEnum::Success);
     }
 
 
     public function warningTasks() : Collection
     {
-        return $this->tasksByTestStatus(TestStatus::RUNTIME_EXCEEDED);
+        return $this->tasksByTestStatus(TestStatusesEnum::RuntimeExceeded);
     }
 
 
 
     public function failedTasks() : Collection
     {
-        $result = $this->tasksByTestStatus(TestStatus::WRONG_ANSWER);
-        $result = $result->merge($this->tasksByTestStatus(TestStatus::COMPILATION_ERROR_STATUS));
-        return $result->merge($this->tasksByTestStatus(TestStatus::RUNTIME_ERROR_STATUS));
+        $result = $this->tasksByTestStatus(TestStatusesEnum::WrongAnswer);
+        $result = $result->merge($this->tasksByTestStatus(TestStatusesEnum::CompilationError));
+        return $result->merge($this->tasksByTestStatus(TestStatusesEnum::RuntimeError));
     }
 
 
-    public function tasksByTestStatus(string $testStatusCode) : Collection
+    public function tasksByTestStatus(TestStatusesEnum $testStatusEnum) : Collection
     {
-        $statusRecord = TestStatus::where('code', $testStatusCode)->get()->first();
+        $statusRecord = TestStatus::where('code', $testStatusEnum->value)->get()->first();
         if ($statusRecord === null) {
-            Log::debug("Exercise: creating test status with code '$testStatusCode'");
-            $statusRecord = TestStatus::findOrCreateByCode($testStatusCode);
+            Log::debug("Exercise: creating test status with code '$testStatusEnum->value'");
+            $statusRecord = TestStatus::findOrCreateByEnum($testStatusEnum);
         }
         return $this->tasks()->where('test_status_id', $statusRecord->id)->orderBy('last_uploaded_at')->get();
     }

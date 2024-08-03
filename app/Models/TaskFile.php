@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\TestStatusesEnum;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -87,7 +88,7 @@ class TaskFile extends Model
             ]);
             $fileAdded = $taskFile->save();
             if ($fileAdded){
-                $task->test_status_id = TestStatus::awaitingTest()->id;
+                $task->test_status_id = TestStatus::findOrCreateByEnum(TestStatusesEnum::Awaiting)->id;
                 if ($task->last_uploaded_at !== $lastUploadedDate->format('c')){
                     $task->last_uploaded_at = $lastUploadedDate->format('c');
                 }
