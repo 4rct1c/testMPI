@@ -19,6 +19,7 @@ class RoutesHelper
             'add_test' => route(name: 'addTest', absolute: false),
             'update_test' => route(name: 'updateTest', absolute: false),
             'delete_exercise' => route(name: 'deleteExercise', absolute: false),
+            'update_mark' => route(name: 'updateMark', absolute: false),
         ];
     }
 }

@@ -1,7 +1,7 @@
 import {ExerciseWithTasksWithTestStatusAndFile, UserWithFullName} from "../../types/types";
 import {TaskItem} from "./TaskItem";
 
-type Props= {
+type Props = {
     exercise: ExerciseWithTasksWithTestStatusAndFile
     users: UserWithFullName[]
 }
@@ -23,7 +23,11 @@ const TasksTableBlock = (props: Props) => {
                 </tr>
                 </thead>
                 <tbody>
-                {props.exercise.tasks.filter(task => task.file !== undefined && task.file.ready_for_test).map(task => <TaskItem task={task} user={props.users.filter(user => user.id === task.user_id)[0] ?? null}/>)}
+                {props.exercise.tasks.filter(task => task.file !== undefined && task.file.ready_for_test).map(task =>
+                    <TaskItem task={task}
+                              key={task.id}
+                              user={props.users.filter(user => user.id === task.user_id)[0] ?? null}/>
+                )}
                 </tbody>
             </table>
         </div>
